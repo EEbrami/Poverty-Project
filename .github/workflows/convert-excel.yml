@@ -103,11 +103,7 @@ jobs:
         else
           # Create commit message with list of converted files
           CONVERTED_COUNT=$(find converted_files -type f -newer .git/COMMIT_EDITMSG 2>/dev/null | wc -l || find converted_files -type f | wc -l)
-          COMMIT_MSG="Automated file conversion for Excel files
-          
-Generated $CONVERTED_COUNT converted files in multiple formats (CSV, JSON, Markdown)
-
-This commit was automatically created by the Convert Excel Files workflow."
+          COMMIT_MSG="Automated file conversion for Excel files - Generated $CONVERTED_COUNT converted files in multiple formats (CSV, JSON, Markdown)"
           
           git commit -m "$COMMIT_MSG"
           git push
