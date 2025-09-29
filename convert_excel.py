@@ -78,12 +78,60 @@ def _convert_dataframe_to_formats(df, base_name, output_path):
     df.to_json(json_file, orient='records', indent=2)
     print(f"  Created: {json_file}")
     
-    # Convert to Markdown
+    # Convert to Markdown - with size limits to avoid huge files
     md_file = output_path / f"{base_name}.md"
     with open(md_file, 'w', encoding='utf-8') as f:
         f.write(f"# {base_name}\n\n")
         f.write("Data converted from Excel file.\n\n")
-        f.write(df.to_markdown(index=False))
+        
+        # Check if dataframe is large
+        num_rows, num_cols = df.shape
+        max_rows_for_full_table = 1000  # Limit full table display
+        max_file_size_mb = 10  # Limit file size to 10MB
+        
+        if num_rows > max_rows_for_full_table:
+            # For large datasets, show summary instead of full table
+            f.write(f"**Dataset Summary:**\n")
+            f.write(f"- Rows: {num_rows:,}\n")
+            f.write(f"- Columns: {num_cols}\n")
+            f.write(f"- Column names: {', '.join(df.columns.astype(str)[:10])}")
+            if len(df.columns) > 10:
+                f.write(f" ... and {len(df.columns) - 10} more columns")
+            f.write("\n\n")
+            
+            # Show first few rows as sample
+            f.write("**Sample Data (first 50 rows):**\n\n")
+            sample_df = df.head(50)
+            
+            # If still too many columns, limit columns as well
+            if num_cols > 15:
+                f.write("*Note: Showing first 15 columns only for readability*\n\n")
+                sample_df = sample_df.iloc[:, :15]
+            
+            f.write(sample_df.to_markdown(index=False))
+            f.write(f"\n\n*Full data available in CSV and JSON formats.*\n")
+        else:
+            # For smaller datasets, show full table
+            markdown_content = df.to_markdown(index=False)
+            
+            # Check estimated file size (rough approximation)
+            estimated_size_mb = len(markdown_content.encode('utf-8')) / (1024 * 1024)
+            
+            if estimated_size_mb > max_file_size_mb:
+                # File would be too large, use summary approach
+                f.write(f"**Dataset Summary:**\n")
+                f.write(f"- Rows: {num_rows:,}\n")
+                f.write(f"- Columns: {num_cols}\n\n")
+                f.write("**Sample Data (first 100 rows):**\n\n")
+                sample_df = df.head(100)
+                if num_cols > 10:
+                    sample_df = sample_df.iloc[:, :10]
+                    f.write("*Note: Showing first 10 columns only for readability*\n\n")
+                f.write(sample_df.to_markdown(index=False))
+                f.write(f"\n\n*Full data available in CSV and JSON formats.*\n")
+            else:
+                f.write(markdown_content)
+        
         f.write("\n")
     print(f"  Created: {md_file}")
 
