@@ -1,0 +1,34 @@
+[
+  {
+    "File":"Income Aggregates",
+    "Name":null,
+    "Label":null,
+    "Codes":null,
+    "Definition":null,
+    "Notes \/ comments":null
+  },
+  {
+    "File":"H",
+    "Name":"DHI",
+    "Label":"disposable household income, household",
+    "Codes":null,
+    "Definition":"Sum of cash and non-cash income from labour, income from capital, income from pensions (including private and public pensions) and non-pension public social benefits stemming from insurance, universal or assistance schemes (including in-kind social assistance transfers), as well as cash and non-cash private transfers, less the amount of income taxes and social contributions paid.",
+    "Notes \/ comments":"This variable is always constructed according to the following formula: dhi = hitotal (= hilabour + hicapital + hipension + hipubsoc + hiprivate) - hxitsc.\n\nThis includes all recurrent payments at annual or more frequent intervals, that are available for current consumption and that do not reduce the net worth of the household.\nThis variable excludes two important non-cash incomes:\n- Non-cash incomes from capital: These refer to the imputed value of the service of durable goods owned by the household, including the dwelling and other durables such as cars. As important as these incomes may be, they are rarely available in the income microdata and, when available, they are calculated with widely varying methodologies. For these reasons, they are excluded from DHI. Users wishing to include them can do so with the use of the LIS microdata.\n- Non-cash universal transfers from government: These refer to government-provided services that benefit individuals, but are provided with the primary objective of meeting the general needs of the overall population, rather than that of assisting the poor. Specifically, we do not include non-cash transfers in the areas of housing, care (including child care), education, or health. These transfers are very hard to evaluate at the individual level and thus are typically only available at the macro-level. Thus, the value of these transfers is also excluded from DHI and, these non-cash incomes are not available in the LIS microdata.\nAlthough we state above that we include non-monetary social assistance transfers, note that this does not mean that all non-cash means-tested public benefits are included in DHI. We exclude means-tested public benefits in cases where they form a portion of a system in which benefits are granted to the whole population (poor and non-poor), although using different tools and programs. For example, in the case of health insurance in the U.S., we have excluded benefits received through the Medicaid program (which provides health insurance to low-income Americans) because most persons who do not receive Medicaid are subsidized either through the U.S. tax system \u2013 if employed \u2013 or through Medicare (the social insurance program for the elderly and persons with disabilities)."
+  },
+  {
+    "File":"H",
+    "Name":"HIFACTOR",
+    "Label":"factor income, household",
+    "Codes":null,
+    "Definition":"Sum of cash and non-cash income from labour and income from capital.",
+    "Notes \/ comments":"This variable is always constructed according to the following formula: hifactor = hilabour + hicapital."
+  },
+  {
+    "File":"H",
+    "Name":"HITRANSFER",
+    "Label":"transfer income, household",
+    "Codes":null,
+    "Definition":"Sum of total pensions (including public and private pensions) and non-pension public social benefits stemming from insurance, universal or assistance schemes (including in-kind social assistance transfers), as well as cash and non-cash private transfers.",
+    "Notes \/ comments":"This variable is always constructed according to the following formula: hitransfer = hipension + hipubsoc + hiprivate."
+  }
+]

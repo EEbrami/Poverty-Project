@@ -1,0 +1,22 @@
+File,Name,Label,Codes,Definition,Notes / comments
+H,NHHMEM,number of household members,"1 1 hh member
+2 2 hh members
+3 3 hh members
+4 4 hh members
+5 5 hh members
+6 6 hh members
+7 7 hh members
+8 8 hh members
+9 9 hh members
+10 10 hh members
+11 11 hh members
+12 12 hh members
+13 13 hh members
+14 14 hh members
+15 15 hh members
+16 16 hh members
+17 17 hh members
+18 18 hh members
+19 19 hh members
+20 20 hh members
+...",Number of household members.,"This is the counter used for all household composition counters below, as well as for the construction of the LIS equivalence scale in all LIS Key Figures."

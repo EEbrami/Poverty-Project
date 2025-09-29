@@ -1,0 +1,10 @@
+[
+  {
+    "File":"H",
+    "Name":"NHHMEM",
+    "Label":"number of household members",
+    "Codes":"1 1 hh member\n2 2 hh members\n3 3 hh members\n4 4 hh members\n5 5 hh members\n6 6 hh members\n7 7 hh members\n8 8 hh members\n9 9 hh members\n10 10 hh members\n11 11 hh members\n12 12 hh members\n13 13 hh members\n14 14 hh members\n15 15 hh members\n16 16 hh members\n17 17 hh members\n18 18 hh members\n19 19 hh members\n20 20 hh members\n...",
+    "Definition":"Number of household members.",
+    "Notes \/ comments":"This is the counter used for all household composition counters below, as well as for the construction of the LIS equivalence scale in all LIS Key Figures."
+  }
+]

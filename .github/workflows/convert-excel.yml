@@ -1,0 +1,130 @@
+name: Convert Excel Files
+
+on:
+  push:
+    paths:
+      - '**/*.xlsx'
+  pull_request:
+    paths:
+      - '**/*.xlsx'
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  convert-excel:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 2  # Fetch previous commit to detect changes
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pandas openpyxl tabulate
+    
+    - name: Get changed Excel files
+      id: changed-files
+      run: |
+        # Get list of changed .xlsx files
+        if [ "${{ github.event_name }}" = "push" ]; then
+          # For push events, compare with previous commit
+          CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD -- '*.xlsx' '**/*.xlsx' || echo "")
+        elif [ "${{ github.event_name }}" = "pull_request" ]; then
+          # For pull requests, compare with base branch
+          CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} HEAD -- '*.xlsx' '**/*.xlsx' || echo "")
+        else
+          # For manual triggers, process all Excel files
+          CHANGED_FILES=$(find . -name "*.xlsx" -type f | grep -v "^./converted_files/" || echo "")
+        fi
+        
+        echo "Changed Excel files:"
+        echo "$CHANGED_FILES"
+        
+        # Save to output
+        echo "files<<EOF" >> $GITHUB_OUTPUT
+        echo "$CHANGED_FILES" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+        
+        # Set flag if any files changed
+        if [ -n "$CHANGED_FILES" ]; then
+          echo "has_changes=true" >> $GITHUB_OUTPUT
+        else
+          echo "has_changes=false" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Convert Excel files
+      if: steps.changed-files.outputs.has_changes == 'true'
+      run: |
+        # Create converted_files directory if it doesn't exist
+        mkdir -p converted_files
+        
+        # Convert each changed Excel file
+        echo "${{ steps.changed-files.outputs.files }}" | while IFS= read -r file; do
+          if [ -n "$file" ] && [ -f "$file" ]; then
+            echo "Converting: $file"
+            python convert_excel.py --file "$file" --output converted_files
+          fi
+        done
+    
+    - name: Check for converted files
+      if: steps.changed-files.outputs.has_changes == 'true'
+      id: check-converted
+      run: |
+        if [ -d "converted_files" ] && [ "$(ls -A converted_files)" ]; then
+          echo "has_converted_files=true" >> $GITHUB_OUTPUT
+          echo "Converted files found:"
+          find converted_files -type f | head -20
+        else
+          echo "has_converted_files=false" >> $GITHUB_OUTPUT
+          echo "No converted files found"
+        fi
+    
+    - name: Commit and push converted files
+      if: steps.check-converted.outputs.has_converted_files == 'true'
+      run: |
+        # Configure git
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        
+        # Add converted files
+        git add converted_files/
+        
+        # Check if there are changes to commit
+        if git diff --staged --quiet; then
+          echo "No changes to commit"
+        else
+          # Create commit message with list of converted files
+          CONVERTED_COUNT=$(find converted_files -type f -newer .git/COMMIT_EDITMSG 2>/dev/null | wc -l || find converted_files -type f | wc -l)
+          COMMIT_MSG="Automated file conversion for Excel files
+          
+Generated $CONVERTED_COUNT converted files in multiple formats (CSV, JSON, Markdown)
+
+This commit was automatically created by the Convert Excel Files workflow."
+          
+          git commit -m "$COMMIT_MSG"
+          git push
+          
+          echo "Successfully committed and pushed converted files"
+        fi
+    
+    - name: Summary
+      if: always()
+      run: |
+        if [ "${{ steps.changed-files.outputs.has_changes }}" = "true" ]; then
+          echo "✅ Excel file conversion workflow completed"
+          if [ "${{ steps.check-converted.outputs.has_converted_files }}" = "true" ]; then
+            echo "✅ Converted files created and committed"
+          else
+            echo "❌ No converted files were created"
+          fi
+        else
+          echo "ℹ️ No Excel files were changed in this commit"
+        fi
