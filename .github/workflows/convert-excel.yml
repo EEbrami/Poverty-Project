@@ -7,10 +7,10 @@ on:
   pull_request:
     paths:
       - '**/*.xlsx'
-  workflow_dispatch:  # Allow manual triggering
-  
+  workflow_dispatch: # Allow manual triggering
+
 permissions:
-  contents: write
+  contents: write # CRITICAL FIX: Grants the default GITHUB_TOKEN write access for committing files.
 
 jobs:
   convert-excel:
@@ -20,8 +20,9 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
-        fetch-depth: 2  # Fetch previous commit to detect changes
-        token: ${{ secrets.ACTIONS_PAT }}
+        # 1. FIX: Removed explicit 'token: ${{ secrets.ACTIONS_PAT }}'
+        # The default GITHUB_TOKEN is used here and now has write permission (from 'permissions: contents: write').
+        fetch-depth: 2 # Fetch previous commit to detect changes
     
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -90,18 +91,10 @@ jobs:
           echo "No converted files found"
         fi
 
-    - name: Set git remote to use PAT
-      if: steps.check-converted.outputs.has_converted_files == 'true'
-      run: |
-        git remote set-url origin https://x-access-token:${{ secrets.ACTIONS_PAT }}@github.com/${{ github.repository }}.git
+    # REMOVED: The 'Set git remote to use PAT' step is no longer needed.
 
-    - name: Display git user
-      if: steps.check-converted.outputs.has_converted_files == 'true'
-      run: |
-        git config --list
-        git remote -v
-    
     - name: Commit and push converted files
+      id: commit-push # Added ID to track step outcome for the Summary
       if: steps.check-converted.outputs.has_converted_files == 'true'
       run: |
         # Configure git
@@ -115,11 +108,13 @@ jobs:
         if git diff --staged --quiet; then
           echo "No changes to commit"
         else
-          # Create commit message with list of converted files
-          CONVERTED_COUNT=$(find converted_files -type f -newer .git/COMMIT_EDITMSG 2>/dev/null | wc -l || find converted_files -type f | wc -l)
+          # 2. FIX: Use git diff --cached to accurately count staged files for the commit message
+          CONVERTED_COUNT=$(git diff --cached --name-only | wc -l)
           COMMIT_MSG="Automated file conversion for Excel files - Generated $CONVERTED_COUNT converted files in multiple formats (CSV, JSON, Markdown)"
           
           git commit -m "$COMMIT_MSG"
+          
+          # The push uses the credentials established by 'actions/checkout' and the GITHUB_TOKEN permissions
           git push
           
           echo "Successfully committed and pushed converted files"
@@ -128,13 +123,16 @@ jobs:
     - name: Summary
       if: always()
       run: |
+        # 3. FIX: Check the outcome of the 'commit-push' step for accurate status reporting
         if [ "${{ steps.changed-files.outputs.has_changes }}" = "true" ]; then
-          echo "✅ Excel file conversion workflow completed"
-          if [ "${{ steps.check-converted.outputs.has_converted_files }}" = "true" ]; then
-            echo "✅ Converted files created and committed"
+          echo "✅ Excel file scanning complete."
+          if [ "${{ steps.commit-push.outcome }}" = "success" ]; then
+            echo "✅ All required files were successfully converted, committed, and pushed."
+          elif [ "${{ steps.commit-push.outcome }}" = "failure" ]; then
+            echo "❌ CRITICAL FAILURE: Files were converted, but the commit/push FAILED. Check permissions or network errors (Exit code 128/403)."
           else
-            echo "❌ No converted files were created"
+            echo "ℹ️ Conversion was attempted, but the final commit step was skipped or inconclusive."
           fi
         else
-          echo "ℹ️ No Excel files were changed in this commit"
+          echo "ℹ️ No Excel files were changed in this commit, conversion skipped."
         fi
