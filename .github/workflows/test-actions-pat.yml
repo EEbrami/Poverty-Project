@@ -1,0 +1,12 @@
+name: Test ACTIONS_PAT
+
+on:
+  workflow_dispatch: # This enables the manual "Run workflow" button on GitHub
+
+jobs:
+  test-token:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test ACTIONS_PAT by fetching user info
+        run: |
+          curl -H "Authorization: token ${{ secrets.ACTIONS_PAT }}" https://api.github.com/user
