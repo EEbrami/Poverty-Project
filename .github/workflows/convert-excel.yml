@@ -89,6 +89,17 @@ jobs:
           echo "has_converted_files=false" >> $GITHUB_OUTPUT
           echo "No converted files found"
         fi
+
+    - name: Set git remote to use PAT
+      if: steps.check-converted.outputs.has_converted_files == 'true'
+      run: |
+        git remote set-url origin https://x-access-token:${{ secrets.ACTIONS_PAT }}@github.com/${{ github.repository }}.git
+
+    - name: Display git user
+      if: steps.check-converted.outputs.has_converted_files == 'true'
+      run: |
+        git config --list
+        git remote -v
     
     - name: Commit and push converted files
       if: steps.check-converted.outputs.has_converted_files == 'true'
