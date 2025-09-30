@@ -18,7 +18,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         fetch-depth: 2  # Fetch previous commit to detect changes
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.ACTIONS_PAT }}
     
     - name: Set up Python
       uses: actions/setup-python@v4
