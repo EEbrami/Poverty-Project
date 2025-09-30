@@ -1,207 +1,120 @@
-#!/usr/bin/env python3
-"""
-Excel File Converter Script
-Converts Excel files to CSV, JSON, and Markdown table formats.
-"""
+name: Convert Excel Files
 
-import os
-import sys
-import json
-import pandas as pd
-from pathlib import Path
-import argparse
+on:
+  push:
+    paths:
+      - '**/*.xlsx'
+  pull_request:
+    paths:
+      - '**/*.xlsx'
+  workflow_dispatch: # Allow manual triggering
 
+permissions:
+  contents: write # CRITICAL FIX: Grants the default GITHUB_TOKEN write access for committing files.
 
-def convert_excel_to_formats(excel_file_path, output_dir):
-    """
-    Convert an Excel file to CSV, JSON, and Markdown formats.
+jobs:
+  convert-excel:
+    runs-on: ubuntu-latest
     
-    Args:
-        excel_file_path (str): Path to the Excel file
-        output_dir (str): Directory to save converted files
-    """
-    try:
-        # Read the Excel file
-        excel_file = Path(excel_file_path)
-        if not excel_file.exists():
-            print(f"Error: Excel file {excel_file_path} does not exist")
-            return False
-            
-        print(f"Converting {excel_file.name}...")
-        
-        # Create output directory if it doesn't exist
-        output_path = Path(output_dir)
-        # output_path is the base directory (e.g., 'converted_files')
-        output_path.mkdir(parents=True, exist_ok=True)
-        
-        # Get the base filename without extension
-        base_name = excel_file.stem
-        
-        # Read Excel file - handle multiple sheets
-        excel_data = pd.read_excel(excel_file_path, sheet_name=None)
-        
-        # If single sheet, process directly
-        if len(excel_data) == 1:
-            sheet_name, df = next(iter(excel_data.items()))
-            _convert_dataframe_to_formats(df, base_name, output_path)
-        else:
-            # Multiple sheets - convert each sheet separately
-            for sheet_name, df in excel_data.items():
-                # Clean sheet name for filename
-                clean_sheet_name = "".join(c for c in sheet_name if c.isalnum() or c in (' ', '-', '_')).rstrip()
-                sheet_base_name = f"{base_name} - {clean_sheet_name}" if clean_sheet_name else f"{base_name} - Sheet{list(excel_data.keys()).index(sheet_name) + 1}"
-                _convert_dataframe_to_formats(df, sheet_base_name, output_path)
-        
-        print(f"Successfully converted {excel_file.name}")
-        return True
-        
-    except Exception as e:
-        print(f"Error converting {excel_file_path}: {str(e)}")
-        return False
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 2 # Fetch previous commit to detect changes
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pandas openpyxl tabulate
+    
+    - name: Get changed Excel files
+      id: changed-files
+      run: |
+        if [ "${{ github.event_name }}" = "push" ]; then
+          CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD -- '*.xlsx' '**/*.xlsx' || echo "")
+        elif [ "${{ github.event_name }}" = "pull_request" ]; then
+          CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} HEAD -- '*.xlsx' '**/*.xlsx' || echo "")
+        else
+          CHANGED_FILES=$(find . -name "*.xlsx" -type f | grep -v "^./converted_files/" || echo "")
+        fi
+        echo "Changed Excel files:"
+        echo "$CHANGED_FILES"
+        echo "files<<EOF" >> $GITHUB_OUTPUT
+        echo "$CHANGED_FILES" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+        if [ -n "$CHANGED_FILES" ]; then
+          echo "has_changes=true" >> $GITHUB_OUTPUT
+        else
+          echo "has_changes=false" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Convert Excel files
+      if: steps.changed-files.outputs.has_changes == 'true'
+      run: |
+        mkdir -p converted_files mdFiles csvFiles jsonFiles
+        echo "${{ steps.changed-files.outputs.files }}" | while IFS= read -r file; do
+          if [ -n "$file" ] && [ -f "$file" ]; then
+            echo "Converting: $file"
+            python convert_excel.py --file "$file" --output converted_files
+          fi
+        done
+        # Move converted files to respective folders
+        find converted_files -type f -name "*.md" -exec mv -t mdFiles {} +
+        find converted_files -type f -name "*.csv" -exec mv -t csvFiles {} +
+        find converted_files -type f -name "*.json" -exec mv -t jsonFiles {} +
+    
+    - name: Check for converted files
+      if: steps.changed-files.outputs.has_changes == 'true'
+      id: check-converted
+      run: |
+        HAS_FILES=false
+        for dir in mdFiles csvFiles jsonFiles; do
+          if [ -d "$dir" ] && [ "$(ls -A $dir)" ]; then
+            HAS_FILES=true
+            echo "Found files in $dir:"
+            find $dir -type f | head -20
+          fi
+        done
+        if [ "$HAS_FILES" = "true" ]; then
+          echo "has_converted_files=true" >> $GITHUB_OUTPUT
+        else
+          echo "has_converted_files=false" >> $GITHUB_OUTPUT
+        fi
 
-
-def _convert_dataframe_to_formats(df, base_name, output_path):
-    """
-    Convert a pandas DataFrame to CSV, JSON, and Markdown formats, 
-    saving each type to a dedicated subdirectory.
+    - name: Commit and push converted files
+      id: commit-push
+      if: steps.check-converted.outputs.has_converted_files == 'true'
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add mdFiles/ csvFiles/ jsonFiles/
+        if git diff --staged --quiet; then
+          echo "No changes to commit"
+        else
+          CONVERTED_COUNT=$(git diff --cached --name-only | wc -l)
+          COMMIT_MSG="Automated file conversion for Excel files - Generated $CONVERTED_COUNT converted files in mdFiles, csvFiles, and jsonFiles"
+          git commit -m "$COMMIT_MSG"
+          git push
+          echo "Successfully committed and pushed converted files"
+        fi
     
-    Args:
-        df (pandas.DataFrame): The dataframe to convert
-        base_name (str): Base name for output files
-        output_path (Path): Base path to output directory (e.g., 'converted_files')
-    """
-    # Define subdirectory paths and ensure they exist
-    csv_path = output_path / "csvFiles"
-    json_path = output_path / "jsonFiles"
-    md_path = output_path / "mdFiles"
-    
-    # Create the subdirectories if they don't exist
-    csv_path.mkdir(parents=True, exist_ok=True)
-    json_path.mkdir(parents=True, exist_ok=True)
-    md_path.mkdir(parents=True, exist_ok=True)
-
-    # Convert to CSV and save to csvFiles
-    csv_file = csv_path / f"{base_name}.csv"
-    df.to_csv(csv_file, index=False)
-    print(f"  Created: {csv_file}")
-    
-    # Convert to JSON and save to jsonFiles
-    json_file = json_path / f"{base_name}.json"
-    df.to_json(json_file, orient='records', indent=2)
-    print(f"  Created: {json_file}")
-    
-    # Convert to Markdown and save to mdFiles
-    md_file = md_path / f"{base_name}.md"
-    with open(md_file, 'w', encoding='utf-8') as f:
-        f.write(f"# {base_name}\n\n")
-        f.write("Data converted from Excel file.\n\n")
-        
-        # Check if dataframe is large
-        num_rows, num_cols = df.shape
-        max_rows_for_full_table = 1000  # Limit full table display
-        max_file_size_mb = 10  # Limit file size to 10MB
-        
-        if num_rows > max_rows_for_full_table:
-            # For large datasets, show summary instead of full table
-            f.write(f"**Dataset Summary:**\n")
-            f.write(f"- Rows: {num_rows:,}\n")
-            f.write(f"- Columns: {num_cols}\n")
-            f.write(f"- Column names: {', '.join(df.columns.astype(str)[:10])}")
-            if len(df.columns) > 10:
-                f.write(f" ... and {len(df.columns) - 10} more columns")
-            f.write("\n\n")
-            
-            # Show first few rows as sample
-            f.write("**Sample Data (first 50 rows):**\n\n")
-            sample_df = df.head(50)
-            
-            # If still too many columns, limit columns as well
-            if num_cols > 15:
-                f.write("*Note: Showing first 15 columns only for readability*\n\n")
-                sample_df = sample_df.iloc[:, :15]
-            
-            f.write(sample_df.to_markdown(index=False))
-            f.write(f"\n\n*Full data available in CSV and JSON formats.*\n")
-        else:
-            # For smaller datasets, show full table
-            markdown_content = df.to_markdown(index=False)
-            
-            # Check estimated file size (rough approximation)
-            estimated_size_mb = len(markdown_content.encode('utf-8')) / (1024 * 1024)
-            
-            if estimated_size_mb > max_file_size_mb:
-                # File would be too large, use summary approach
-                f.write(f"**Dataset Summary:**\n")
-                f.write(f"- Rows: {num_rows:,}\n")
-                f.write(f"- Columns: {num_cols}\n\n")
-                f.write("**Sample Data (first 100 rows):**\n\n")
-                sample_df = df.head(100)
-                if num_cols > 10:
-                    sample_df = sample_df.iloc[:, :10]
-                    f.write("*Note: Showing first 10 columns only for readability*\n\n")
-                f.write(sample_df.to_markdown(index=False))
-                f.write(f"\n\n*Full data available in CSV and JSON formats.*\n")
-            else:
-                f.write(markdown_content)
-        
-        f.write("\n")
-    print(f"  Created: {md_file}")
-
-
-def find_excel_files(directory):
-    """
-    Find all Excel files in a directory and its subdirectories.
-    
-    Args:
-        directory (str): Directory to search
-        
-    Returns:
-        list: List of Excel file paths
-    """
-    excel_files = []
-    for root, dirs, files in os.walk(directory):
-        for file in files:
-            if file.lower().endswith('.xlsx'):
-                excel_files.append(os.path.join(root, file))
-    return excel_files
-
-
-def main():
-    parser = argparse.ArgumentParser(description='Convert Excel files to CSV, JSON, and Markdown formats')
-    parser.add_argument('--file', help='Specific Excel file to convert')
-    parser.add_argument('--directory', default='.', help='Directory to search for Excel files (default: current directory)')
-    parser.add_argument('--output', default='converted_files', help='Output directory for converted files (default: converted_files)')
-    
-    args = parser.parse_args()
-    
-    success_count = 0
-    total_count = 0
-    
-    if args.file:
-        # Convert specific file
-        total_count = 1
-        if convert_excel_to_formats(args.file, args.output):
-            success_count = 1
-    else:
-        # Find and convert all Excel files
-        excel_files = find_excel_files(args.directory)
-        total_count = len(excel_files)
-        
-        if not excel_files:
-            print("No Excel files found in the specified directory.")
-            return
-        
-        print(f"Found {total_count} Excel file(s) to convert...")
-        
-        for excel_file in excel_files:
-            if convert_excel_to_formats(excel_file, args.output):
-                success_count += 1
-    
-    print(f"\nConversion complete: {success_count}/{total_count} files converted successfully")
-    
-    if success_count < total_count:
-        sys.exit(1)
-
-
-if __name__ == "__main__":
-    main()
+    - name: Summary
+      if: always()
+      run: |
+        if [ "${{ steps.changed-files.outputs.has_changes }}" = "true" ]; then
+          echo "✅ Excel file scanning complete."
+          if [ "${{ steps.commit-push.outcome }}" = "success" ]; then
+            echo "✅ All required files were successfully converted, committed, and pushed."
+          elif [ "${{ steps.commit-push.outcome }}" = "failure" ]; then
+            echo "❌ CRITICAL FAILURE: Files were converted, but the commit/push FAILED. Check permissions or network errors (Exit code 128/403)."
+          else
+            echo "ℹ️ Conversion was attempted, but the final commit step was skipped or inconclusive."
+          fi
+        else
+          echo "ℹ️ No Excel files were changed in this commit, conversion skipped."
+        fi
