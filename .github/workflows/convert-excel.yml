@@ -8,6 +8,9 @@ on:
     paths:
       - '**/*.xlsx'
   workflow_dispatch:  # Allow manual triggering
+  
+permissions:
+  contents: write
 
 jobs:
   convert-excel:
