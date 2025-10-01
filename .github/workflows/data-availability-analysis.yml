@@ -28,7 +28,7 @@ jobs:
     steps:
       - name: Check out
         uses: actions/checkout@v4
-        with:
+        with
           fetch-depth: 0
 
       - name: Set up Python
@@ -41,17 +41,30 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r analysis/data-availability/requirements.txt
 
-      # Set a dynamic environment variable for the number of phases and filename
-      # This handles both the 'push' default (15) and 'workflow_dispatch' input.
+      # NEW AND CORRECTED STEP: Dynamically set the output filename using Bash conditional logic.
       - name: Set dynamic path variables
         id: dynamic_vars
         run: |
-          # Use coalesce to handle when inputs are empty (i.e., on a 'push' trigger).
-          PHASES="${{ coalesce(github.event.inputs.num_phases, 15) }}"
+          # The number of phases is passed as input only during workflow_dispatch.
+          # For a 'push' trigger, this expression is empty, so we default to 15.
+          PHASES_INPUT="${{ github.event.inputs.num_phases }}"
+          DEFAULT_PHASES=15
+          
+          # Use standard Bash check: if the input string is empty, use the default.
+          if [ -z "$PHASES_INPUT" ]; then
+            PHASES=$DEFAULT_PHASES
+          else
+            PHASES=$PHASES_INPUT
+          fi
+          
           # The CSV file stem is hardcoded in the script's run.py default
           STEM="dart-med-pop_decomp-dhi"
+          
+          # Construct the output filename
+          OUTPUT_FILENAME="ph${PHASES}_${STEM}.md"
+          
           echo "PHASES=$PHASES" >> $GITHUB_ENV
-          echo "OUTPUT_FILENAME=ph${PHASES}_${STEM}.md" >> $GITHUB_ENV
+          echo "OUTPUT_FILENAME=$OUTPUT_FILENAME" >> $GITHUB_ENV
 
       - name: Run analysis
         run: |
@@ -70,7 +83,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
-          # CORRECTION: Now using the dynamically calculated path
+          # Now uses the dynamically calculated path (e.g., ph15_dart-med-pop_decomp-dhi.md)
           git add "${FULL_PATH}" || true
           
           if ! git diff --cached --quiet; then
