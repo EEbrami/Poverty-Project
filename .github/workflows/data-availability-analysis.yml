@@ -1,13 +1,24 @@
 name: Data Availability Analysis
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - feature/**
     paths:
       - 'analysis/data-availability/**'
       - 'xlsxConverted/csvFiles/dart-med-pop_decomp-dhi.csv'
+  workflow_dispatch:
+    inputs:
+      csv_path:
+        description: 'Path to the input CSV file (relative to repo root)'
+        default: 'xlsxConverted/csvFiles/dart-med-pop_decomp-dhi.csv'
+        required: true
+        type: string
+      num_phases:
+        description: 'Number of sequential exclusion phases to run'
+        default: 15
+        required: true
+        type: number
 
 jobs:
   run-analysis:
@@ -17,7 +28,7 @@ jobs:
     steps:
       - name: Check out
         uses: actions/checkout@v4
-        with:
+        with: # Syntax Corrected
           fetch-depth: 0
 
       - name: Set up Python
@@ -30,20 +41,51 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r analysis/data-availability/requirements.txt
 
+      # Dynamic pathing logic using Bash conditional (Robust Solution)
+      - name: Set dynamic path variables
+        id: dynamic_vars
+        run: |
+          # 1. Determine number of phases, defaulting to 15 for 'push' triggers.
+          PHASES_INPUT="${{ github.event.inputs.num_phases }}"
+          DEFAULT_PHASES=15
+          
+          if [ -z "$PHASES_INPUT" ]; then
+            PHASES=$DEFAULT_PHASES
+          else
+            PHASES=$PHASES_INPUT
+          fi
+          
+          # 2. Hardcoded CSV stem from run.py default
+          STEM="dart-med-pop_decomp-dhi"
+          
+          # 3. Construct the output filename
+          OUTPUT_FILENAME="ph${PHASES}_${STEM}.md"
+          
+          echo "PHASES=$PHASES" >> $GITHUB_ENV
+          echo "OUTPUT_FILENAME=$OUTPUT_FILENAME" >> $GITHUB_ENV
+
       - name: Run analysis
         run: |
-          python analysis/data-availability/run.py
+          # The script is run with arguments only when triggered manually via workflow_dispatch.
+          # If triggered by 'push', github.event.inputs will be empty, and run.py will use its internal defaults.
+          python analysis/data-availability/run.py \
+            --csv-path ${{ github.event.inputs.csv_path }} \
+            --num-phases ${{ github.event.inputs.num_phases }}
 
       - name: Commit results if changed
         run: |
           set -eux
+          # Use the dynamically determined filename from the previous step
+          FULL_PATH="analysis/data-availability/results/greedy_algorithm/${{ env.OUTPUT_FILENAME }}"
+          
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add analysis/data-availability/results/*.json || true
-          git add analysis/data-availability/results/multiple-rows/*.csv || true
-          git add analysis/data-availability/summary.md || true
+          
+          # Now uses the dynamically calculated path (e.g., ph5_dart-med-pop_decomp-dhi.md)
+          git add "${FULL_PATH}" || true
+          
           if ! git diff --cached --quiet; then
-            git commit -m "Analysis: update availability submatrix results, multi-row CSVs, and summary"
+            git commit -m "Analysis: update greedy coverage algorithm results"
             git push
           else
             echo "No changes to commit."
