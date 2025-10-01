@@ -1,0 +1,104 @@
+name: Data Availability Visuals
+
+on:
+  workflow_dispatch:
+    inputs:
+      csv_path:
+        description: 'Path to the input CSV within the repo (e.g., xlsxConverted/csvFiles/dart-med-pop_decomp-dhi.csv)'
+        required: true
+        type: string
+      start_year:
+        description: 'Clip to years >= start_year (optional)'
+        required: false
+        type: string
+        default: ''
+      end_year:
+        description: 'Clip to years <= end_year (optional)'
+        required: false
+        type: string
+        default: ''
+      tick_interval:
+        description: 'Tick mark spacing for x-axis (default: 5)'
+        required: false
+        type: string
+        default: '5'
+      glyph:
+        description: 'Character to render for available data (default: █)'
+        required: false
+        type: string
+        default: '█'
+      include_universal:
+        description: 'Include Universal row (default: true)'
+        required: false
+        type: string
+        default: 'true'
+
+jobs:
+  generate-visuals:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas numpy
+
+      - name: Generate visualizations
+        run: |
+          set -eux
+          
+          # Build the command with required argument
+          CMD="python analysis/data-availability/visuals/generate_visuals.py --csv-path ${{ github.event.inputs.csv_path }}"
+          
+          # Add optional arguments if provided
+          if [ -n "${{ github.event.inputs.start_year }}" ]; then
+            CMD="$CMD --start-year ${{ github.event.inputs.start_year }}"
+          fi
+          
+          if [ -n "${{ github.event.inputs.end_year }}" ]; then
+            CMD="$CMD --end-year ${{ github.event.inputs.end_year }}"
+          fi
+          
+          if [ -n "${{ github.event.inputs.tick_interval }}" ]; then
+            CMD="$CMD --tick-interval ${{ github.event.inputs.tick_interval }}"
+          fi
+          
+          if [ -n "${{ github.event.inputs.glyph }}" ]; then
+            CMD="$CMD --glyph \"${{ github.event.inputs.glyph }}\""
+          fi
+          
+          if [ -n "${{ github.event.inputs.include_universal }}" ]; then
+            CMD="$CMD --include-universal ${{ github.event.inputs.include_universal }}"
+          fi
+          
+          # Execute the command
+          eval $CMD
+
+      - name: Commit and push visualization outputs
+        run: |
+          set -eux
+          
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
+          # Add all files in the visuals directory (only .txt and .md should exist)
+          git add analysis/data-availability/visuals/*.txt || true
+          git add analysis/data-availability/visuals/*.md || true
+          
+          if ! git diff --cached --quiet; then
+            git commit -m "Add data availability visualizations for ${{ github.event.inputs.csv_path }}"
+            git push
+          else
+            echo "No changes to commit."
+          fi

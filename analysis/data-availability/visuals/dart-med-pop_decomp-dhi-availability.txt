@@ -1,0 +1,53 @@
+Data Availability Visualization
+============================================================
+
+Source: xlsxConverted/csvFiles/dart-med-pop_decomp-dhi.csv
+Year range: 1983-2023 (41 years)
+Number of entities: 33
+
+Legend:
+  █ = Data available for that year
+    = Data not available
+
+Entity          | LS | Availability by Year
+------------------------------------------------------------
+Chile           |  1 |        █ █ █ █ █ █  █  █  █ █ █ █ █      
+Czech Republic  |  1 |          █   █     █ █  █  █  █  █       
+Estonia         |  1 |                  █   █  █  █  █  █       
+Finland         |  1 |     █   █   █    █   █  █  █  █  █       
+Hungary         |  1 |         █  █    █     █ █ █  █  █        
+Slovenia        |  1 |               █ █    █  █  █ █  █        
+Australia       |  2 |   █   █     █     █ ██   █ █   █ █ █ █   
+Italy           |  2 | ██ ██ █ █ █ █  █ █ █ █ █ █ █ █ █ █   █   
+Mexico          |  3 |  █    █  █ █ █ █ █ █ ███ █ █ █ █ █ █ █ █ 
+Norway          |  4 |    █    █   █    █   █  █  █  █  █  ████ 
+South Korea     |  6 |                        █ █ █ █ █ ██████  
+Slovakia        |  6 |          █   █       █  █  █  ██████     
+Denmark         |  8 |     █    █  █    █   █  █  █  █ ████████ 
+Japan           | 13 |                          █████████████   
+Lithuania       | 13 |                           █████████████  
+Iceland         | 15 |                     ███████████████      
+Switzerland     | 17 |          █       █ █ █ █████████████████ 
+Netherlands     | 18 | █   █  █  █     █    ██████████████████  
+Belgium         | 19 |   █  █   █  █ █  █  ███████████████████  
+Spain           | 19 |   █    █  ████████   ███████████████████ 
+Austria         | 20 |            ███████  ████████████████████ 
+Greece          | 20 |             █    █ ████████████████████  
+Ireland         | 20 |     █      ███   █ ████████████████████  
+Poland          | 20 |    █     █  █   █    ████████████████████
+Israel          | 21 |    █     █    █   █████████████████████  
+Colombia        | 22 |                   ██████████████████████ 
+Sweden          | 22 |     █    █  █    ██████████████████████  
+France          | 27 |  █     █     ███████████████████████████ 
+Canada          | 38 |  ██████████████████████████████████████  
+Luxembourg      | 39 |   ███████████████████████████████████████
+United Kingdom  | 39 | ███████████████████████████████████████  
+Germany         | 40 | ████████████████████████████████████████ 
+United States   | 40 | ████████████████████████████████████████ 
+Universal       | 41 | █████████████████████████████████████████
+
+                  |    | 1985    1990    1995    2000    2005    2010    2015    2020
+
+Note: LS = Longest Streak (max consecutive years with data)
+Entities are sorted by ascending longest streak.
+The 'Universal' row shows full availability across all years.
