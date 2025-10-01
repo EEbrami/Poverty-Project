@@ -1,0 +1,36 @@
+{
+  "num_countries": 21,
+  "length": 3,
+  "partition": [
+    2014,
+    2015,
+    2016
+  ],
+  "period": [
+    2014,
+    2016
+  ],
+  "countries": [
+    "Austria",
+    "Belgium",
+    "Canada",
+    "Colombia",
+    "France",
+    "Germany",
+    "Greece",
+    "Iceland",
+    "Ireland",
+    "Israel",
+    "Japan",
+    "Lithuania",
+    "Luxembourg",
+    "Netherlands",
+    "Poland",
+    "Slovakia",
+    "Spain",
+    "Sweden",
+    "Switzerland",
+    "United Kingdom",
+    "United States"
+  ]
+}
