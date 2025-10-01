@@ -127,10 +127,11 @@ jobs:
           # Execute the command
           eval $CMD
 
-      - name: Commit and push visualization outputs
+      - name: Commit and push visualization outputs (Fixing Non-Fast-Forward)
         run: |
           set -eux
           
+          # Set GitHub's standard bot credentials
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
@@ -138,7 +139,13 @@ jobs:
           git add analysis/data-availability/visuals/* || true 
           
           if ! git diff --cached --quiet; then
+            # 1. Commit the local changes
             git commit -m "Add data availability visualizations for ${{ github.event.inputs.csv_path }}"
+            
+            # 2. CRITICAL FIX: Fetch and Rebase onto the latest remote state
+            git pull --rebase origin ${{ github.ref_name }}
+            
+            # 3. Push the integrated changes
             git push
           else
             echo "No changes to commit."
