@@ -3,21 +3,15 @@
 Availability submatrix analysis on OECD income CSV.
 
 - Builds binary availability matrix Y: Y[country, year] = 1 if income present, else 0.
-- Implements multiple algorithms to find large all-ones submatrices:
-  A1. Greedy longest-streak intersection (Phase 1 and Phase 2) as described by the user
-  A1b. Coverage-based pivot shrink (records countries that fully cover pivot period, not just equal)
-  A2. Best consecutive-year window (max countries fully covered by the interval)
-  A3. Two- and three-year moving windows and offset-restricted variants
-  A4. Maximum biclique (arbitrary years with full coverage; not necessarily consecutive)
+- Implements Coverage-based pivot shrink algorithm (A1b) for 15 sequential exclusion phases.
+- Outputs a single Markdown file with all 15 phases in collapsible sections.
 
-Outputs are JSON objects with:
+Each phase result includes:
 - num_countries: int
 - length: int (number of years in the partition)
-- partition: list of years (explicit years; for consecutive windows also includes 'period': [start_year, end_year])
+- partition: list of years
+- period: [start_year, end_year] (when consecutive)
 - countries: list of country names (sorted)
-
-Additionally, for algorithms that yield multiple rows (A1 and A1b), CSV summaries are also saved under
-analysis/data-availability/results/multiple-rows/ with one row per discovered partition.
 
 Author: Copilot
 """
@@ -194,146 +188,6 @@ def alg_greedy_longest_streak_process(
 
     return {"rows": rows}
 
-def alg_consecutive_window_best(data: AvailabilityData) -> Dict:
-    """Find best consecutive-year interval maximizing number of countries with full coverage."""
-    df = data.matrix
-    years = data.years
-    n, T = df.shape
-    # Precompute prefix sums for each row
-    pref = np.cumsum(df.values, axis=1)
-    best = {"num_countries": 0, "length": 0, "partition": [], "period": [], "countries": []}
-
-    for l in range(T):
-        for r in range(l, T):  # inclusive r
-            L = r - l + 1
-            # For each row i: sum[l..r] = pref[i,r] - pref[i,l-1]
-            if l == 0:
-                window_sums = pref[:, r]
-            else:
-                window_sums = pref[:, r] - pref[:, l - 1]
-            mask = window_sums == L
-            cnt = int(mask.sum())
-            if cnt > best["num_countries"] or (cnt == best["num_countries"] and L > best["length"]):
-                part = years[l : r + 1]
-                best = {
-                    "num_countries": cnt,
-                    "length": L,
-                    "partition": part,
-                    "period": [part[0], part[-1]],
-                    "countries": sorted(df.index[mask].tolist()),
-                }
-    return best
-
-def alg_window_fixed_length(data: AvailabilityData, L: int, restrict_offsets: Optional[Set[int]] = None) -> Dict:
-    """
-    Best moving window of fixed length L (consecutive years).
-    If restrict_offsets provided, only allow start indices l where l % L in restrict_offsets.
-    """
-    df = data.matrix
-    years = data.years
-    n, T = df.shape
-    if L <= 0 or L > T:
-        return {"num_countries": 0, "length": L, "partition": [], "period": [], "countries": []}
-
-    pref = np.cumsum(df.values, axis=1)
-    best = {"num_countries": 0, "length": L, "partition": [], "period": [], "countries": []}
-
-    valid_starts = range(0, T - L + 1)
-    if restrict_offsets is not None:
-        valid_starts = [l for l in valid_starts if (l % L) in restrict_offsets]
-
-    for l in valid_starts:
-        r = l + L - 1
-        window_sums = pref[:, r] - (pref[:, l - 1] if l > 0 else 0)
-        mask = window_sums == L
-        cnt = int(mask.sum())
-        if cnt > best["num_countries"]:
-            part = years[l : r + 1]
-            best = {
-                "num_countries": cnt,
-                "length": L,
-                "partition": part,
-                "period": [part[0], part[-1]],
-                "countries": sorted(df.index[mask].tolist()),
-            }
-    return best
-
-def alg_max_biclique(data: AvailabilityData, time_limit_seconds: float = 8.0) -> Dict:
-    """
-    Exact maximum biclique on bipartite graph (Countries x Years),
-    seeking R subset of countries and C subset of years such that every (r,c) is 1, maximizing |R|*|C|.
-    Backtracking with simple bounds.
-
-    Returns partition as a sorted list of years and list of countries.
-    """
-    import time
-
-    years = data.years
-    df = data.matrix
-
-    # Build set per country of available years (indices)
-    year_idx = list(range(len(years)))
-    avail: Dict[str, Set[int]] = {c: set(np.where(df.loc[c].values == 1)[0].tolist()) for c in df.index}
-
-    countries_sorted = sorted(df.index.tolist(), key=lambda c: len(avail[c]), reverse=True)
-
-    best_rows: List[str] = []
-    best_cols: Set[int] = set()
-    best_area = 0
-
-    start_time = time.time()
-
-    def backtrack(idx: int, chosen_rows: List[str], cols: Set[int]) -> None:
-        nonlocal best_rows, best_cols, best_area
-        # Time check
-        if time.time() - start_time > time_limit_seconds:
-            return
-
-        # Current area
-        area = len(chosen_rows) * len(cols)
-        if area > best_area:
-            best_area = area
-            best_rows = chosen_rows.copy()
-            best_cols = cols.copy()
-
-        # Upper bound if we took all remaining rows with current cols
-        remaining = len(countries_sorted) - idx
-        ub = (len(chosen_rows) + remaining) * len(cols)
-        # Note: cols can only shrink; this UB is weak but cheap.
-        if ub <= best_area:
-            return
-
-        # If no columns remain, adding rows won't help
-        if not cols and chosen_rows:
-            return
-
-        # Try to include more rows
-        for j in range(idx, len(countries_sorted)):
-            c = countries_sorted[j]
-            new_cols = cols & avail[c] if chosen_rows else avail[c].copy()
-            if not new_cols:
-                # Even with this row, no columns; area becomes 0, skip unless we had none selected
-                continue
-            # Prune if even optimistic bound with new_cols won't exceed best
-            optimistic = (len(chosen_rows) + 1 + (len(countries_sorted) - j - 1)) * len(new_cols)
-            if optimistic <= best_area:
-                continue
-            chosen_rows.append(c)
-            backtrack(j + 1, chosen_rows, new_cols)
-            chosen_rows.pop()
-
-    # Start with empty selection, columns initially "unknown"; we'll set on first row
-    backtrack(0, [], set())
-
-    part_years = sorted(years[i] for i in best_cols)
-    return {
-        "num_countries": len(best_rows),
-        "length": len(part_years),
-        "partition": part_years,
-        "period": [part_years[0], part_years[-1]] if part_years else [],
-        "countries": sorted(best_rows),
-    }
-
 # ----------------------------
 # Output helpers
 # ----------------------------
@@ -343,117 +197,125 @@ def save_json(obj: Dict, out_path: str) -> None:
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(obj, f, indent=2, ensure_ascii=False)
 
-def save_rows_csv(rows: List[Dict], out_csv_path: str) -> None:
-    """Save multiple-row algorithm output to CSV.
-    Columns: row_index, num_countries, length, period_start, period_end, partition_years, countries
-    partition_years and countries are semicolon-separated lists.
-    """    
-    os.makedirs(os.path.dirname(out_csv_path), exist_ok=True)
-    records = []
-    for idx, r in enumerate(rows, 1):
-        period = r.get("period", []) or []
-        period_start = period[0] if len(period) >= 1 else ""
-        period_end = period[-1] if len(period) >= 1 else ""
-        part_list = r.get("partition", []) or []
-        countries = r.get("countries", []) or []
-        records.append({
-            "row_index": idx,
-            "num_countries": r.get("num_countries", 0),
-            "length": r.get("length", 0),
-            "period_start": period_start,
-            "period_end": period_end,
-            "partition_years": ";".join(str(y) for y in part_list),
-            "countries": ";".join(countries),
-        })
-    pd.DataFrame.from_records(records).to_csv(out_csv_path, index=False)
+def save_all_phases_to_markdown(all_phase_results: Dict[str, List[Dict]], output_md_path: str) -> None:
+    """
+    Save all phase results to a single Markdown file with collapsible sections.
+    
+    Args:
+        all_phase_results: Dict with keys like "Phase 1", "Phase 2", etc., and values as list of row dicts
+        output_md_path: Path to output .md file
+    """
+    os.makedirs(os.path.dirname(output_md_path), exist_ok=True)
+    
+    with open(output_md_path, "w", encoding="utf-8") as f:
+        f.write("# Data Availability Analysis: 15-Phase Greedy Coverage Algorithm\n\n")
+        f.write("This document contains results from 15 sequential exclusion phases using the ")
+        f.write("Coverage-based pivot shrink (A1b) algorithm.\n\n")
+        f.write("Each phase excludes countries from previous phases and finds the optimal ")
+        f.write("submatrix of remaining data.\n\n")
+        
+        # Sort phases by number (Phase 1, Phase 2, etc.)
+        phase_keys = sorted(all_phase_results.keys(), 
+                          key=lambda x: int(x.split()[1]) if len(x.split()) > 1 else 0)
+        
+        for phase_key in phase_keys:
+            rows = all_phase_results[phase_key]
+            
+            # Extract phase number for heading
+            phase_num = phase_key.split()[1] if len(phase_key.split()) > 1 else "?"
+            
+            # Write phase heading for GitHub TOC
+            f.write(f"## Phase {phase_num}\n\n")
+            
+            if not rows:
+                f.write("*No results found for this phase.*\n\n")
+                continue
+            
+            # Prepare data for DataFrame
+            table_data = []
+            for idx, row in enumerate(rows, 1):
+                partition_str = ";".join(str(y) for y in row.get("partition", []))
+                countries_str = ";".join(row.get("countries", []))
+                period = row.get("period", [])
+                period_str = f"{period[0]}-{period[-1]}" if len(period) >= 2 else ""
+                
+                table_data.append({
+                    "Row": idx,
+                    "Countries": row.get("num_countries", 0),
+                    "Length": row.get("length", 0),
+                    "Area": row.get("num_countries", 0) * row.get("length", 0),
+                    "Period": period_str,
+                    "Partition": partition_str,
+                    "Country_List": countries_str
+                })
+            
+            # Create DataFrame and convert to markdown
+            df = pd.DataFrame(table_data)
+            
+            # Wrap in collapsible details section
+            f.write(f"<details>\n")
+            f.write(f"<summary>Click to view full partition results for Phase {phase_num}...</summary>\n\n")
+            
+            # Write the markdown table
+            f.write(df.to_markdown(index=False))
+            f.write("\n\n")
+            
+            f.write("</details>\n\n")
 
-def run_all(csv_path: str, results_dir: str) -> Dict[str, str]:
+
+
+def run_all(csv_path: str, results_dir: str, num_phases: int = 15) -> Dict[str, str]:
+    """
+    Run the Coverage-based pivot shrink (A1b) algorithm for multiple sequential phases.
+    
+    Each phase excludes countries found in previous phases and runs the algorithm again
+    on the remaining dataset.
+    
+    Args:
+        csv_path: Path to input CSV file
+        results_dir: Directory for output files
+        num_phases: Number of sequential exclusion phases to run (default: 15)
+    
+    Returns:
+        Dictionary with single key "all_phases_summary" mapping to the output markdown path
+    """
     data = load_availability(csv_path)
+    
+    # Collect results from all phases
+    all_phase_results: Dict[str, List[Dict]] = {}
+    
+    # Track countries to exclude across all phases
+    cumulative_exclude: Set[str] = set()
+    
+    for phase_num in range(1, num_phases + 1):
+        phase_key = f"Phase {phase_num}"
+        
+        # Run the algorithm with cumulative exclusions
+        phase_exclude = cumulative_exclude if cumulative_exclude else None
+        result = alg_greedy_longest_streak_process(
+            data, 
+            phase2_exclude=phase_exclude, 
+            record_equal_only=False  # Coverage-based (A1b)
+        )
+        
+        rows = result.get("rows", [])
+        all_phase_results[phase_key] = rows
+        
+        # If we got results, add the first row's countries to exclusion list for next phase
+        if rows and len(rows) > 0:
+            first_row_countries = set(rows[0].get("countries", []))
+            cumulative_exclude.update(first_row_countries)
+        else:
+            # No more results possible, stop early
+            break
+    
+    # Create output directory for markdown file
+    greedy_dir = os.path.join(results_dir, "greedy_algorithm")
+    os.makedirs(greedy_dir, exist_ok=True)
+    
+    # Save all results to single markdown file
+    output_md_path = os.path.join(greedy_dir, "all_phases_summary.md")
+    save_all_phases_to_markdown(all_phase_results, output_md_path)
+    
+    return {"all_phases_summary": output_md_path}
 
-    outputs: Dict[str, str] = {}
-
-    multi_dir = os.path.join(results_dir, "multiple-rows")
-
-    # A1: Greedy (literal-equality rows)
-    res_a1_phase1 = alg_greedy_longest_streak_process(data, phase2_exclude=None, record_equal_only=True)
-    out1 = os.path.join(results_dir, "greedy_longest_streak_phase1_equal.json")
-    save_json(res_a1_phase1, out1)
-    # CSV export for multiple rows
-    if res_a1_phase1.get("rows"):
-        save_rows_csv(res_a1_phase1["rows"], os.path.join(multi_dir, "greedy_longest_streak_phase1_equal.csv"))
-    outputs["greedy_longest_streak_phase1_equal"] = out1
-
-    # Phase 2: exclude countries from first row and repeat
-    exclude = set(res_a1_phase1["rows"][0]["countries"]) if res_a1_phase1.get("rows") else set()
-    res_a1_phase2 = alg_greedy_longest_streak_process(data, phase2_exclude=exclude, record_equal_only=True)
-    out2 = os.path.join(results_dir, "greedy_longest_streak_phase2_equal.json")
-    save_json(res_a1_phase2, out2)
-    if res_a1_phase2.get("rows"):
-        save_rows_csv(res_a1_phase2["rows"], os.path.join(multi_dir, "greedy_longest_streak_phase2_equal.csv"))
-    outputs["greedy_longest_streak_phase2_equal"] = out2
-
-    # A1b: Coverage-based pivot shrink (phase 1 and 2)
-    res_a1b_phase1 = alg_greedy_longest_streak_process(data, phase2_exclude=None, record_equal_only=False)
-    out1b = os.path.join(results_dir, "greedy_pivot_coverage_phase1.json")
-    save_json(res_a1b_phase1, out1b)
-    if res_a1b_phase1.get("rows"):
-        save_rows_csv(res_a1b_phase1["rows"], os.path.join(multi_dir, "greedy_pivot_coverage_phase1.csv"))
-    outputs["greedy_pivot_coverage_phase1"] = out1b
-
-    exclude_b = set(res_a1b_phase1["rows"][0]["countries"]) if res_a1b_phase1.get("rows") else set()
-    res_a1b_phase2 = alg_greedy_longest_streak_process(data, phase2_exclude=exclude_b, record_equal_only=False)
-    out2b = os.path.join(results_dir, "greedy_pivot_coverage_phase2.json")
-    save_json(res_a1b_phase2, out2b)
-    if res_a1b_phase2.get("rows"):
-        save_rows_csv(res_a1b_phase2["rows"], os.path.join(multi_dir, "greedy_pivot_coverage_phase2.csv"))
-    outputs["greedy_pivot_coverage_phase2"] = out2b
-
-    # A2: Best consecutive-year window
-    res_a2 = alg_consecutive_window_best(data)
-    out3 = os.path.join(results_dir, "best_consecutive_window.json")
-    save_json(res_a2, out3)
-    outputs["best_consecutive_window"] = out3
-
-    # A3: Two-/Three-year moving windows and restricted-offset variants
-    res_2_all = alg_window_fixed_length(data, L=2, restrict_offsets=None)
-    out4 = os.path.join(results_dir, "best_window_2y_any_start.json")
-    save_json(res_2_all, out4)
-    outputs["best_window_2y_any_start"] = out4
-
-    res_2_off1 = alg_window_fixed_length(data, L=2, restrict_offsets={0})
-    out5 = os.path.join(results_dir, "best_window_2y_offset0.json")
-    save_json(res_2_off1, out5)
-    outputs["best_window_2y_offset0"] = out5
-
-    res_2_off2 = alg_window_fixed_length(data, L=2, restrict_offsets={1})
-    out6 = os.path.join(results_dir, "best_window_2y_offset1.json")
-    save_json(res_2_off2, out6)
-    outputs["best_window_2y_offset1"] = out6
-
-    res_3_all = alg_window_fixed_length(data, L=3, restrict_offsets=None)
-    out7 = os.path.join(results_dir, "best_window_3y_any_start.json")
-    save_json(res_3_all, out7)
-    outputs["best_window_3y_any_start"] = out7
-
-    res_3_off0 = alg_window_fixed_length(data, L=3, restrict_offsets={0})
-    out8 = os.path.join(results_dir, "best_window_3y_offset0.json")
-    save_json(res_3_off0, out8)
-    outputs["best_window_3y_offset0"] = out8
-
-    res_3_off1 = alg_window_fixed_length(data, L=3, restrict_offsets={1})
-    out9 = os.path.join(results_dir, "best_window_3y_offset1.json")
-    save_json(res_3_off1, out9)
-    outputs["best_window_3y_offset1"] = out9
-
-    res_3_off2 = alg_window_fixed_length(data, L=3, restrict_offsets={2})
-    out10 = os.path.join(results_dir, "best_window_3y_offset2.json")
-    save_json(res_3_off2, out10)
-    outputs["best_window_3y_offset2"] = out10
-
-    # A4: Max biclique (arbitrary years)
-    res_a4 = alg_max_biclique(data, time_limit_seconds=8.0)
-    out11 = os.path.join(results_dir, "max_biclique_any_years.json")
-    save_json(res_a4, out11)
-    outputs["max_biclique_any_years"] = out11
-
-    return outputs

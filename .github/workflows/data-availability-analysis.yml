@@ -39,11 +39,9 @@ jobs:
           set -eux
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add analysis/data-availability/results/*.json || true
-          git add analysis/data-availability/results/multiple-rows/*.csv || true
-          git add analysis/data-availability/summary.md || true
+          git add analysis/data-availability/results/greedy_algorithm/all_phases_summary.md || true
           if ! git diff --cached --quiet; then
-            git commit -m "Analysis: update availability submatrix results, multi-row CSVs, and summary"
+            git commit -m "Analysis: update 15-phase greedy coverage algorithm results"
             git push
           else
             echo "No changes to commit."
