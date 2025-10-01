@@ -234,19 +234,15 @@ def save_all_phases_to_markdown(all_phase_results: Dict[str, List[Dict]], output
             # Prepare data for DataFrame
             table_data = []
             for idx, row in enumerate(rows, 1):
-                partition_str = ";".join(str(y) for y in row.get("partition", []))
                 countries_str = ";".join(row.get("countries", []))
                 period = row.get("period", [])
                 period_str = f"{period[0]}-{period[-1]}" if len(period) >= 2 else ""
                 
                 table_data.append({
-                    "Row": idx,
-                    "Countries": row.get("num_countries", 0),
-                    "Length": row.get("length", 0),
-                    "Area": row.get("num_countries", 0) * row.get("length", 0),
-                    "Period": period_str,
-                    "Partition": partition_str,
-                    "Country_List": countries_str
+                    "period": period_str,
+                    "length": row.get("length", 0),
+                    "num_countries": row.get("num_countries", 0),
+                    "countries": countries_str
                 })
             
             # Create DataFrame and convert to markdown
