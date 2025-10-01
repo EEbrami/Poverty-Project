@@ -23,10 +23,10 @@ on:
         type: string
         default: '5'
       glyph:
-        description: 'Character to render for available data (default: █)'
+        description: 'Character to render for available data (default: #)'
         required: false
         type: string
-        default: '█'
+        default: '#' # FIXED: Changed from '█' to '#' to ensure proper workflow parsing in GitHub UI.
       include_universal:
         description: 'Include Universal row (default: true)'
         required: false
