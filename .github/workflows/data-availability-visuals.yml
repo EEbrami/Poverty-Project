@@ -3,9 +3,9 @@ name: Data Availability Visuals
 on:
   push:
     branches:
-      - '**' # FIXED: This universal pattern matches ALL branches, ensuring visibility on any new feature branch.
+      - '**' # General trigger: Runs on push to any branch for visibility and testing.
     paths:
-      - '.github/workflows/data-availability-visuals.yml' # Only runs when this file is changed
+      - '.github/workflows/data-availability-visuals.yml'
   
   workflow_dispatch:
     inputs:
@@ -35,21 +35,21 @@ on:
         type: string
         default: '#' 
       include_universal:
-        description: 'Include Universal row (default: true)'
+        description: 'Include Universal row showing full availability (default: true)'
         required: false
         type: string
         default: 'true'
-      visualization_mode: # Used by Python script to handle gridlines (vertical-grid-5yr, etc.)
-        description: 'Defines the visual grid style for text/md output (e.g., minimal-ticks, vertical-grid-5yr, vertical-grid-1yr)'
+      visualization_mode:
+        description: 'Defines the visual grid style (e.g., vertical-grid-5yr, alt-row-shading)'
         required: true
         type: string
         default: 'vertical-grid-5yr' 
-      output_format: # Controls which file types are generated (text, png, pdf, etc.)
-        description: 'Output format(s) to generate (comma-separated: text, md, png, pdf, svg, etc.)'
+      output_format:
+        description: 'Output format(s) to generate (comma-separated: png, pdf, svg)'
         required: true
         type: string
-        default: 'text,md,png' 
-        
+        default: '' # Leave empty; the Python default is now 'png,pdf'.
+
 jobs:
   generate-visuals:
     runs-on: ubuntu-latest
@@ -76,50 +76,34 @@ jobs:
         run: |
           set -eux
           
-          # --- DIAGNOSTIC STEP (KEEP FOR ROBUSTNESS) ---
-          echo "--- Content of generate_visuals.py on runner ---"
-          cat analysis/data-availability/visuals/generate_visuals.py
-          echo "------------------------------------------------"
-          
-          # --- CRITICAL FIX: Determine CSV Path based on trigger ---
+          # CRITICAL FIX: Determine CSV Path based on trigger (prevents errors on push)
           CSV_PATH="${{ github.event.inputs.csv_path }}"
           if [ -z "$CSV_PATH" ]; then
-            # Hardcode default path only if input is completely empty (i.e., push trigger)
             CSV_PATH="xlsxConverted/csvFiles/dart-med-pop_decomp-dhi.csv" 
           fi
-          
-          # Start CMD with the MANDATORY and now-guaranteed CSV Path
+
+          # Start CMD with the mandatory CSV Path
           CMD="python analysis/data-availability/visuals/generate_visuals.py --csv-path $CSV_PATH"
           
-          # --- Conditionally add ALL optional arguments IF they have a value ---
-          
-          # Start Year
+          # Conditionally add ALL optional arguments IF they have a value
           if [ -n "${{ github.event.inputs.start_year }}" ]; then
             CMD="$CMD --start-year ${{ github.event.inputs.start_year }}"
           fi
-          # End Year
           if [ -n "${{ github.event.inputs.end_year }}" ]; then
             CMD="$CMD --end-year ${{ github.event.inputs.end_year }}"
           fi
-          # Tick Interval
           if [ -n "${{ github.event.inputs.tick_interval }}" ]; then
             CMD="$CMD --tick-interval ${{ github.event.inputs.tick_interval }}"
           fi
-          # Glyph
           if [ -n "${{ github.event.inputs.glyph }}" ]; then
             CMD="$CMD --glyph \"${{ github.event.inputs.glyph }}\""
           fi
-          # Include Universal
           if [ -n "${{ github.event.inputs.include_universal }}" ]; then
             CMD="$CMD --include-universal ${{ github.event.inputs.include_universal }}"
           fi
-          
-          # Visualization Mode (NEW ARGUMENT)
           if [ -n "${{ github.event.inputs.visualization_mode }}" ]; then
             CMD="$CMD --visualization-mode ${{ github.event.inputs.visualization_mode }}"
           fi
-          
-          # Output Format (NEW ARGUMENT)
           if [ -n "${{ github.event.inputs.output_format }}" ]; then
             CMD="$CMD --output-format ${{ github.event.inputs.output_format }}"
           fi
@@ -131,7 +115,7 @@ jobs:
         run: |
           set -eux
           
-          # Set GitHub's standard bot credentials
+          # Set Git credentials for the bot
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
@@ -139,13 +123,11 @@ jobs:
           git add analysis/data-availability/visuals/* || true 
           
           if ! git diff --cached --quiet; then
-            # 1. Commit the local changes (Git history is maintained locally)
-            # Changed commit message for clarity of artifact update
+            # Commit the local changes
             git commit -m "Update generated visualizations for ${{ github.event.inputs.csv_path }}"
             
-            # 2. CRITICAL FIX: Push, forcing the update over any parallel remote push.
-            # We skip pull/rebase and use --force-with-lease to safely overwrite artifacts.
-            # ${{ github.ref_name }} correctly identifies the branch (e.g., EEbrami-generalizing)
+            # CRITICAL FIX: Force push with lease to overwrite generated artifacts 
+            # and avoid the non-fast-forward conflict on binary files.
             git push origin ${{ github.ref_name }} --force-with-lease
           else
             echo "No changes to commit."
