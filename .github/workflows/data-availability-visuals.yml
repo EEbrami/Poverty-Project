@@ -1,6 +1,14 @@
 name: Data Availability Visuals
 
 on:
+  # FIX: Added a narrow 'push' trigger to force visibility on feature branches.
+  push:
+    branches:
+      - 'copilot/**' # Targets your current feature branch pattern
+      - main           # Targets the default branch for future visibility
+    paths:
+      - '.github/workflows/data-availability-visuals.yml' # Only run when this file changes
+
   workflow_dispatch:
     inputs:
       csv_path:
@@ -26,7 +34,7 @@ on:
         description: 'Character to render for available data (default: #)'
         required: false
         type: string
-        default: '#' # FIXED: Changed from '█' to '#' to ensure proper workflow parsing in GitHub UI.
+        default: '#' # FIXED: Changed from '█' to a safe ASCII character to prevent parser errors
       include_universal:
         description: 'Include Universal row (default: true)'
         required: false
