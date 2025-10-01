@@ -1,0 +1,50 @@
+name: Data Availability Analysis
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/**
+    paths:
+      - 'analysis/data-availability/**'
+      - 'xlsxConverted/csvFiles/dart-med-pop_decomp-dhi.csv'
+
+jobs:
+  run-analysis:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r analysis/data-availability/requirements.txt
+
+      - name: Run analysis
+        run: |
+          python analysis/data-availability/run.py
+
+      - name: Commit results if changed
+        run: |
+          set -eux
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add analysis/data-availability/results/*.json || true
+          git add analysis/data-availability/results/multiple-rows/*.csv || true
+          git add analysis/data-availability/summary.md || true
+          if ! git diff --cached --quiet; then
+            git commit -m "Analysis: update availability submatrix results, multi-row CSVs, and summary"
+            git push
+          else
+            echo "No changes to commit."
+          fi

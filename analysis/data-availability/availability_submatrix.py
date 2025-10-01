@@ -33,7 +33,7 @@ import numpy as np
 import pandas as pd
 
 
-dataclass
+@dataclass
 class AvailabilityData:
     countries: List[str]
     years: List[int]
