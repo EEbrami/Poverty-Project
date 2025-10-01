@@ -1,20 +1,20 @@
 name: Data Availability Visuals
 
 on:
-  # FIX: Added a narrow 'push' trigger to force visibility on feature branches.
   push:
     branches:
-      - 'copilot/**' # Targets your current feature branch pattern
-      - main           # Targets the default branch for future visibility
+      - 'copilot/**' # Targets your feature branch pattern
+      - main
     paths:
-      - '.github/workflows/data-availability-visuals.yml' # Only run when this file changes
-
+      - '.github/workflows/data-availability-visuals.yml' # Only runs when this file is changed
+  
   workflow_dispatch:
     inputs:
       csv_path:
         description: 'Path to the input CSV within the repo (e.g., xlsxConverted/csvFiles/dart-med-pop_decomp-dhi.csv)'
         required: true
         type: string
+        default: 'xlsxConverted/csvFiles/dart-med-pop_decomp-dhi.csv' # ADDED DEFAULT FOR UI/CONSISTENCY
       start_year:
         description: 'Clip to years >= start_year (optional)'
         required: false
@@ -34,7 +34,7 @@ on:
         description: 'Character to render for available data (default: #)'
         required: false
         type: string
-        default: '#' # FIXED: Changed from '█' to a safe ASCII character to prevent parser errors
+        default: '#' 
       include_universal:
         description: 'Include Universal row (default: true)'
         required: false
@@ -66,8 +66,17 @@ jobs:
         run: |
           set -eux
           
-          # Build the command with required argument
-          CMD="python analysis/data-availability/visuals/generate_visuals.py --csv-path ${{ github.event.inputs.csv_path }}"
+          # --- CRITICAL FIX: Determine CSV Path based on trigger ---
+          CSV_PATH="${{ github.event.inputs.csv_path }}"
+          if [ -z "$CSV_PATH" ]; then
+            # If input is empty (e.g., triggered by 'push'), use a hardcoded default path.
+            # This prevents the "--csv-path" argument from being passed an empty string.
+            CSV_PATH="xlsxConverted/csvFiles/dart-med-pop_decomp-dhi.csv" 
+          fi
+          # --- END CRITICAL FIX ---
+
+          # Build the command with the now-guaranteed CSV_PATH argument
+          CMD="python analysis/data-availability/visuals/generate_visuals.py --csv-path $CSV_PATH"
           
           # Add optional arguments if provided
           if [ -n "${{ github.event.inputs.start_year }}" ]; then
