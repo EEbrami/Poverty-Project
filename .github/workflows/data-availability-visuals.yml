@@ -3,10 +3,9 @@ name: Data Availability Visuals
 on:
   push:
     branches:
-      - 'copilot/**'
-      - main
+      - '**' # FIXED: This universal pattern matches ALL branches, ensuring visibility on any new feature branch.
     paths:
-      - '.github/workflows/data-availability-visuals.yml'
+      - '.github/workflows/data-availability-visuals.yml' # Only runs when this file is changed
   
   workflow_dispatch:
     inputs:
@@ -40,16 +39,16 @@ on:
         required: false
         type: string
         default: 'true'
-      visualization_mode: # Required for gridline control in the Python script
+      visualization_mode: # Used by Python script to handle gridlines (vertical-grid-5yr, etc.)
         description: 'Defines the visual grid style for text/md output (e.g., minimal-ticks, vertical-grid-5yr, vertical-grid-1yr)'
         required: true
         type: string
         default: 'vertical-grid-5yr' 
-      output_format: # Controls which file types are generated
-        description: 'Output format(s) to generate (comma-separated: text, png, pdf, svg, etc.)'
+      output_format: # Controls which file types are generated (text, png, pdf, etc.)
+        description: 'Output format(s) to generate (comma-separated: text, md, png, pdf, svg, etc.)'
         required: true
         type: string
-        default: 'text,md,png' # Defaulting to text, markdown, and image
+        default: 'text,md,png' 
         
 jobs:
   generate-visuals:
@@ -70,21 +69,20 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          # Install core data libs + visualization libraries for PNG/PDF support
+          # Installing packages for image generation (PNG/PDF) and data handling
           pip install pandas numpy matplotlib seaborn
 
       - name: Generate visualizations
         run: |
           set -eux
           
-          # --- Determine CSV Path (Prevents 'push' trigger errors) ---
+          # CRITICAL FIX: Determine CSV Path based on trigger (prevents errors on push)
           CSV_PATH="${{ github.event.inputs.csv_path }}"
           if [ -z "$CSV_PATH" ]; then
             CSV_PATH="xlsxConverted/csvFiles/dart-med-pop_decomp-dhi.csv" 
           fi
-          # --- END CRITICAL FIX ---
 
-          # Build the command with new required arguments
+          # Build the command, passing ALL arguments, including the new format and mode
           CMD="python analysis/data-availability/visuals/generate_visuals.py --csv-path $CSV_PATH --visualization-mode ${{ github.event.inputs.visualization_mode }} --output-format ${{ github.event.inputs.output_format }}"
           
           # Add optional arguments if provided
@@ -119,7 +117,6 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
           # General Fix: Add ALL generated files from the visuals directory.
-          # This makes the .yml fully independent of the file extensions in the .py script.
           git add analysis/data-availability/visuals/* || true 
           
           if ! git diff --cached --quiet; then
