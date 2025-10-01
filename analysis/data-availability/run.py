@@ -58,11 +58,17 @@ def main():
     print(f"Running analysis on: {csv_path}")
     print(f"Number of phases: {num_phases}")
     
-    # Run analysis. The output path is hardcoded inside run_all to ensure the previous file is overwritten.
+    # Run analysis. The output path is now dynamically generated inside run_all.
     results_map = run_all(str(csv_path), str(out_dir), num_phases=num_phases)
     
     # Print results
-    output_file = results_map.get("all_phases_summary")
+    # MODIFIED: Retrieve the path dynamically from the dictionary's single value.
+    output_file = None
+    if results_map and len(results_map) == 1:
+        # Get the path (value) from the single item in the map, 
+        # as the key is now the dynamic filename
+        output_file = list(results_map.values())[0]
+    
     if output_file:
         print(f"✓ Analysis complete!")
         print(f"✓ Generated: {output_file}")
