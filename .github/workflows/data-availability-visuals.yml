@@ -76,7 +76,7 @@ jobs:
         run: |
           set -eux
           
-          # --- DIAGNOSTIC STEP: Print Python script version to log ---
+          # --- DIAGNOSTIC STEP (KEEP FOR ROBUSTNESS) ---
           echo "--- Content of generate_visuals.py on runner ---"
           cat analysis/data-availability/visuals/generate_visuals.py
           echo "------------------------------------------------"
@@ -84,32 +84,44 @@ jobs:
           # --- CRITICAL FIX: Determine CSV Path based on trigger ---
           CSV_PATH="${{ github.event.inputs.csv_path }}"
           if [ -z "$CSV_PATH" ]; then
+            # Hardcode default path only if input is completely empty (i.e., push trigger)
             CSV_PATH="xlsxConverted/csvFiles/dart-med-pop_decomp-dhi.csv" 
           fi
-          # --- END CRITICAL FIX ---
-
-          # Build the command with new required arguments
-          CMD="python analysis/data-availability/visuals/generate_visuals.py --csv-path $CSV_PATH --visualization-mode ${{ github.event.inputs.visualization_mode }} --output-format ${{ github.event.inputs.output_format }}"
           
-          # Add optional arguments if provided
+          # Start CMD with the MANDATORY and now-guaranteed CSV Path
+          CMD="python analysis/data-availability/visuals/generate_visuals.py --csv-path $CSV_PATH"
+          
+          # --- Conditionally add ALL optional arguments IF they have a value ---
+          
+          # Start Year
           if [ -n "${{ github.event.inputs.start_year }}" ]; then
             CMD="$CMD --start-year ${{ github.event.inputs.start_year }}"
           fi
-          
+          # End Year
           if [ -n "${{ github.event.inputs.end_year }}" ]; then
             CMD="$CMD --end-year ${{ github.event.inputs.end_year }}"
           fi
-          
+          # Tick Interval
           if [ -n "${{ github.event.inputs.tick_interval }}" ]; then
             CMD="$CMD --tick-interval ${{ github.event.inputs.tick_interval }}"
           fi
-          
+          # Glyph
           if [ -n "${{ github.event.inputs.glyph }}" ]; then
             CMD="$CMD --glyph \"${{ github.event.inputs.glyph }}\""
           fi
-          
+          # Include Universal
           if [ -n "${{ github.event.inputs.include_universal }}" ]; then
             CMD="$CMD --include-universal ${{ github.event.inputs.include_universal }}"
+          fi
+          
+          # Visualization Mode (NEW ARGUMENT)
+          if [ -n "${{ github.event.inputs.visualization_mode }}" ]; then
+            CMD="$CMD --visualization-mode ${{ github.event.inputs.visualization_mode }}"
+          fi
+          
+          # Output Format (NEW ARGUMENT)
+          if [ -n "${{ github.event.inputs.output_format }}" ]; then
+            CMD="$CMD --output-format ${{ github.event.inputs.output_format }}"
           fi
           
           # Execute the command
