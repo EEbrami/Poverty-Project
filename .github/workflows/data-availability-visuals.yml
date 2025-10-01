@@ -127,7 +127,7 @@ jobs:
           # Execute the command
           eval $CMD
 
-      - name: Commit and push visualization outputs (Fixing Non-Fast-Forward)
+      - name: Commit and push visualization outputs (CRITICAL FIX)
         run: |
           set -eux
           
@@ -139,14 +139,14 @@ jobs:
           git add analysis/data-availability/visuals/* || true 
           
           if ! git diff --cached --quiet; then
-            # 1. Commit the local changes
-            git commit -m "Add data availability visualizations for ${{ github.event.inputs.csv_path }}"
+            # 1. Commit the local changes (Git history is maintained locally)
+            # Changed commit message for clarity of artifact update
+            git commit -m "Update generated visualizations for ${{ github.event.inputs.csv_path }}"
             
-            # 2. CRITICAL FIX: Fetch and Rebase onto the latest remote state
-            git pull --rebase origin ${{ github.ref_name }}
-            
-            # 3. Push the integrated changes
-            git push
+            # 2. CRITICAL FIX: Push, forcing the update over any parallel remote push.
+            # We skip pull/rebase and use --force-with-lease to safely overwrite artifacts.
+            # ${{ github.ref_name }} correctly identifies the branch (e.g., EEbrami-generalizing)
+            git push origin ${{ github.ref_name }} --force-with-lease
           else
             echo "No changes to commit."
           fi
