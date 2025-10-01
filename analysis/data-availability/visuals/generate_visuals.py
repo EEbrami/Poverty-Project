@@ -343,9 +343,10 @@ def write_image_outputs(
 ):
     """Generate image outputs (PNG/PDF) using Matplotlib/Seaborn."""
     
-    # Use the binary matrix for the heatmap
-    # Flip 0/1 for better color mapping (1 is missing/white, 0 is available/black/colored)
-    image_matrix = matrix.copy().replace({1: 0, 0: 1}) 
+    # Use the binary matrix for the heatmap directly.
+    # The original matrix has 1 for Available and 0 for Missing.
+    # The 'binary' cmap maps high values (1) to black and low values (0) to white.
+    image_matrix = matrix.copy() # CRITICAL FIX: Removed the incorrect inversion line.
     
     # Heatmap visualization is ideal for professional data availability grids
     plt.figure(figsize=(12, max(6, len(image_matrix) * 0.3)))
@@ -353,7 +354,7 @@ def write_image_outputs(
     # Generate the heatmap
     ax = sns.heatmap(
         image_matrix,
-        cmap="binary", # Binary map: white for available (0), black/grey for missing (1)
+        cmap="binary", # Binary map: High (1/Available) -> Black. Low (0/Missing) -> White.
         linewidths=0.5, # CRITICAL: Adds definite grid lines between cells
         linecolor="gray",
         cbar=False, # No color bar needed
