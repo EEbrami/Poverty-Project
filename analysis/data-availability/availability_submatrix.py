@@ -25,6 +25,7 @@ from typing import Dict, List, Optional, Sequence, Tuple, Set
 
 import numpy as np
 import pandas as pd
+from pathlib import Path # ADDED: for robust file path handling
 
 
 @dataclass
@@ -273,7 +274,8 @@ def run_all(csv_path: str, results_dir: str, num_phases: int = 15) -> Dict[str, 
         num_phases: Number of sequential exclusion phases to run (default: 15)
     
     Returns:
-        Dictionary with single key "all_phases_summary" mapping to the output markdown path
+        Dictionary with single key (the dynamically generated filename) 
+        mapping to the output markdown path
     """
     data = load_availability(csv_path)
     
@@ -309,9 +311,13 @@ def run_all(csv_path: str, results_dir: str, num_phases: int = 15) -> Dict[str, 
     greedy_dir = os.path.join(results_dir, "greedy_algorithm")
     os.makedirs(greedy_dir, exist_ok=True)
     
+    # Construct the dynamic filename: ph#_[input_file_name_without_extension].md
+    input_filename_stem = Path(csv_path).stem
+    output_filename = f"ph{num_phases}_{input_filename_stem}.md" 
+    
     # Save all results to single markdown file
-    output_md_path = os.path.join(greedy_dir, "all_phases_summary.md")
+    output_md_path = os.path.join(greedy_dir, output_filename)
     save_all_phases_to_markdown(all_phase_results, output_md_path)
     
-    return {"all_phases_summary": output_md_path}
-
+    # Return the dynamic filename as the key
+    return {output_filename: output_md_path}
