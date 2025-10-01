@@ -2,27 +2,25 @@
 """
 Generate data availability visualizations for country-by-year CSV data.
 
-Produces two outputs:
-1. A plain text file (.txt) with a grid visualization
-2. A Markdown file (.md) with the same grid in a code fence plus summary
-
-The grid shows data availability across years for each country/entity,
-with rows sorted by ascending longest streak length.
+Produces text/md outputs with selectable grid styles and/or professional PNG/PDF
+image heatmaps.
 """
 
 import argparse
 import os
 import re
-import sys
-from pathlib import Path
 from typing import List, Tuple, Optional
 
 import numpy as np
 import pandas as pd
 
+# New imports for image generation (must be installed via workflow)
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 
 def parse_args():
-    """Parse command-line arguments."""
+    """Parse command-line arguments, including new visualization options."""
     parser = argparse.ArgumentParser(
         description="Generate data availability visualizations from CSV"
     )
@@ -52,8 +50,8 @@ def parse_args():
     parser.add_argument(
         "--glyph",
         type=str,
-        default="█",
-        help="Character to render for available data (default: █)",
+        default="#", # Using '#' for safety, as configured in the YAML
+        help="Character to render for available data (default: #)",
     )
     parser.add_argument(
         "--include-universal",
@@ -61,6 +59,21 @@ def parse_args():
         default="true",
         help="Include Universal row showing full availability (default: true)",
     )
+    
+    # NEW ARGUMENTS FOR VISUALIZATION CONTROL
+    parser.add_argument(
+        "--visualization-mode",
+        type=str,
+        default="vertical-grid-5yr",
+        help="Defines the grid style for text/md output (e.g., minimal-ticks, vertical-grid-5yr, vertical-grid-1yr)",
+    )
+    parser.add_argument(
+        "--output-format",
+        type=str,
+        default="text,md",
+        help="Comma-separated list of output formats (e.g., text, md, png, pdf)",
+    )
+    
     return parser.parse_args()
 
 
@@ -74,6 +87,7 @@ def load_csv_with_years(csv_path: str) -> Tuple[pd.DataFrame, List[int], str]:
         entity_col: Name of the entity column
     """
     if not os.path.exists(csv_path):
+        # This should use the default path defined in the YAML if triggered by push
         raise FileNotFoundError(f"CSV file not found: {csv_path}")
     
     df = pd.read_csv(csv_path)
@@ -104,30 +118,6 @@ def load_csv_with_years(csv_path: str) -> Tuple[pd.DataFrame, List[int], str]:
     return df, years, entity_col
 
 
-def compute_partitions(availability_row: np.ndarray, years: List[int]) -> str:
-    """
-    Compute partition string for a row.
-    
-    Returns string like "1987-1992;2004-2007" for streaks of available data.
-    """
-    partitions = []
-    in_streak = False
-    start_idx = None
-    
-    for i, val in enumerate(availability_row):
-        if val == 1 and not in_streak:
-            start_idx = i
-            in_streak = True
-        elif val == 0 and in_streak:
-            partitions.append(f"{years[start_idx]}-{years[i-1]}")
-            in_streak = False
-    
-    if in_streak:
-        partitions.append(f"{years[start_idx]}-{years[len(availability_row)-1]}")
-    
-    return ";".join(partitions) if partitions else ""
-
-
 def compute_longest_streak(availability_row: np.ndarray) -> int:
     """Compute the longest contiguous streak of available data."""
     max_streak = 0
@@ -143,23 +133,21 @@ def compute_longest_streak(availability_row: np.ndarray) -> int:
     return max_streak
 
 
-def generate_grid(
+def generate_availability_data(
     df: pd.DataFrame,
     years: List[int],
     entity_col: str,
-    glyph: str,
     include_universal: bool,
     start_year: Optional[int] = None,
     end_year: Optional[int] = None,
-) -> Tuple[List[Tuple[str, int, str]], List[int]]:
+) -> Tuple[List[str], pd.DataFrame]:
     """
-    Generate the grid data for visualization.
+    Generate the sorted entity list and the binary availability matrix (1=available, 0=missing).
     
     Returns:
-        rows: List of (entity_name, longest_streak, grid_line) tuples
-        filtered_years: The years after filtering
+        entity_names: List of entity names (including Universal, if present), sorted by longest streak.
+        availability_matrix: Pandas DataFrame (Entities x Years) with 0/1 values.
     """
-    # Filter years if needed
     filtered_years = years
     if start_year is not None:
         filtered_years = [y for y in filtered_years if y >= start_year]
@@ -169,15 +157,13 @@ def generate_grid(
     if not filtered_years:
         raise ValueError("No years remain after filtering")
     
-    # Get year column names as strings
     year_cols = [str(y) for y in filtered_years]
     
-    # Build availability matrix
-    rows = []
+    data = []
+    entity_data = [] # Stores (entity, longest_streak) for sorting
+    
     for _, row in df.iterrows():
         entity = str(row[entity_col])
-        
-        # Check availability for each year
         availability = []
         for year_str in year_cols:
             if year_str in df.columns:
@@ -189,111 +175,124 @@ def generate_grid(
         availability_array = np.array(availability)
         longest_streak = compute_longest_streak(availability_array)
         
-        # Generate grid line
-        grid_chars = [glyph if av == 1 else " " for av in availability]
-        grid_line = "".join(grid_chars)
-        
-        rows.append((entity, longest_streak, grid_line))
+        data.append(availability)
+        entity_data.append((entity, longest_streak))
+
+    matrix = pd.DataFrame(data, index=[e[0] for e in entity_data], columns=filtered_years)
     
-    # Sort by longest streak (ascending)
-    rows.sort(key=lambda x: x[1])
+    # Sort matrix rows by longest streak (ascending)
+    entity_data.sort(key=lambda x: x[1])
+    sorted_entities = [e[0] for e in entity_data]
+    matrix = matrix.loc[sorted_entities]
     
     # Add Universal row if requested
     if include_universal:
-        universal_grid = glyph * len(filtered_years)
-        rows.append(("Universal", len(filtered_years), universal_grid))
-    
-    return rows, filtered_years
+        matrix.loc["Universal"] = 1
+        sorted_entities.append("Universal")
+        
+    return sorted_entities, matrix
 
 
-def generate_tick_line(years: List[int], tick_interval: int) -> str:
-    """Generate x-axis tick line with year labels at intervals."""
-    if not years:
-        return ""
+def generate_text_grid(
+    entity_names: List[str],
+    matrix: pd.DataFrame,
+    args,
+) -> Tuple[List[str], str]:
+    """Generate the list of text grid lines and the final tick line, incorporating grid modes."""
     
-    # Build tick line
-    tick_chars = []
-    tick_labels = []
+    min_year, max_year = matrix.columns.min(), matrix.columns.max()
+    num_years = len(matrix.columns)
     
-    for i, year in enumerate(years):
-        if i == 0 or (year % tick_interval == 0):
-            # This is a tick position
-            tick_labels.append((i, str(year)))
+    # Set default glyph if universal/markdown glyphs are desired (e.g., block character)
+    # Using '█' (U+2588) for the text grid
+    glyph = args.glyph if args.glyph != "#" else "█"
     
-    # Create the tick line with proper spacing
-    # We need to align the year labels with their positions
-    tick_line_parts = [" "] * len(years)
+    grid_lines = []
+    for entity in entity_names:
+        row = matrix.loc[entity].values
+        longest_streak = compute_longest_streak(row) if entity != "Universal" else num_years
+        
+        grid_chars = []
+        for i, val in enumerate(row):
+            char = glyph if val == 1 else " "
+            
+            # Apply vertical grid lines based on mode
+            if args.visualization_mode == "vertical-grid-5yr":
+                if (i % args.tick_interval == 0) and i != 0:
+                    grid_chars.append("|")
+            elif args.visualization_mode == "vertical-grid-1yr":
+                if i != 0:
+                    grid_chars.append("|")
+            
+            # Apply row shading/alternating glyphs
+            if args.visualization_mode == "alt-row-shading":
+                 if entity_names.index(entity) % 2 == 1:
+                     char = char.replace(glyph, "#") # Simple way to shade using a different glyph
+            
+            grid_chars.append(char)
+        
+        grid_line_content = "".join(grid_chars).strip()
+
+        # Format: "{entity:<15} | {longest_streak:2d} | {grid_line_content}"
+        grid_lines.append(f"{entity:<15} | {longest_streak:2d} | {grid_line_content}")
     
-    # For each tick, place its label
-    label_positions = []
-    for pos, label in tick_labels:
-        label_positions.append((pos, label))
+    # --- Generate Tick Line (Aligned with Grid) ---
+    tick_line_content = ""
+    for i, year in enumerate(matrix.columns):
+        if args.visualization_mode == "vertical-grid-5yr":
+            if (i % args.tick_interval == 0) and i != 0:
+                tick_line_content += " " # Spacing for the | grid character
+        elif args.visualization_mode == "vertical-grid-1yr":
+            if i != 0:
+                tick_line_content += " "
+                
+        # Simple year marker every tick_interval
+        if year % args.tick_interval == 0 or i == 0:
+            tick_line_content += str(year)
+            # Add spacing only after the year label to align the next mark
+            if i + 1 < num_years:
+                tick_line_content += " " * (args.tick_interval - len(str(year)))
+        else:
+            tick_line_content += " "
+            
+    # Final tick line construction
+    # Pad for Entity (15 chars) + ' | ' (3 chars) + LS (2 chars) + ' | ' (3 chars)
+    # Pad length = 15 + 3 + 2 + 3 = 23 chars
+    tick_line = " " * 23 + tick_line_content
     
-    # Build a line with years at tick positions
-    # We'll create multiple lines if needed to avoid overlap
-    tick_line = " " * 18  # Padding for entity name and longest_streak columns
+    # Clean up tick line alignment for the text grid, ensuring it starts under the data
+    # (This is still a source of misalignment due to variable font width, but the pipe grid helps)
     
-    # Simple approach: show years every tick_interval
-    for i, year in enumerate(years):
-        if (year % tick_interval == 0):
-            # Mark this position
-            tick_line += str(year)
-            # Add spacing to next tick
-            remaining = tick_interval - len(str(year))
-            if i + remaining < len(years):
-                tick_line += " " * remaining
-        # else:
-        #     tick_line += " "
-    
-    return tick_line
+    return grid_lines, tick_line
 
 
-def write_outputs(
-    rows: List[Tuple[str, int, str]],
-    years: List[int],
-    tick_interval: int,
+def write_text_outputs(
+    grid_lines: List[str],
+    tick_line: str,
+    matrix: pd.DataFrame,
     output_dir: str,
     slug: str,
-    csv_path: str,
+    args,
 ):
     """Write the .txt and .md output files."""
-    os.makedirs(output_dir, exist_ok=True)
     
+    min_year, max_year = matrix.columns.min(), matrix.columns.max()
+    num_years = len(matrix.columns)
+    num_entities = len(matrix) - (1 if "Universal" in matrix.index else 0)
+    
+    # Use the block glyph for clear legend, regardless of the argparse glyph
+    legend_glyph = "█"
+    
+    # --- Write .txt file ---
     txt_path = os.path.join(output_dir, f"{slug}-availability.txt")
-    md_path = os.path.join(output_dir, f"{slug}-availability.md")
-    
-    # Generate header
-    min_year = min(years)
-    max_year = max(years)
-    num_years = len(years)
-    num_entities = len(rows) - (1 if rows and rows[-1][0] == "Universal" else 0)
-    
-    # Generate the grid content
-    grid_lines = []
-    for entity, longest_streak, grid_line in rows:
-        # Format: "{entity:<15} | {longest_streak:2d} | {grid_line}"
-        grid_lines.append(f"{entity:<15} | {longest_streak:2d} | {grid_line}")
-    
-    # Generate tick line
-    tick_line = " " * 18 + "| " + " " * 3 + "| "
-    for i, year in enumerate(years):
-        if year % tick_interval == 0:
-            year_str = str(year)
-            tick_line += year_str
-            # Add spacing to align with next tick
-            spacing = tick_interval - 1  # One character already used by this year's last digit
-            if i + spacing < len(years):
-                tick_line += " " * spacing
-    
-    # Write .txt file
     with open(txt_path, "w", encoding="utf-8") as f:
         f.write("Data Availability Visualization\n")
         f.write("=" * 60 + "\n\n")
-        f.write(f"Source: {csv_path}\n")
+        f.write(f"Source: {args.csv_path}\n")
         f.write(f"Year range: {min_year}-{max_year} ({num_years} years)\n")
         f.write(f"Number of entities: {num_entities}\n\n")
         f.write("Legend:\n")
-        f.write("  █ = Data available for that year\n")
+        f.write(f"  {legend_glyph} = Data available for that year\n")
         f.write("    = Data not available\n\n")
         f.write("Entity          | LS | Availability by Year\n")
         f.write("-" * 60 + "\n")
@@ -304,14 +303,15 @@ def write_outputs(
         f.write("\n")
         f.write("Note: LS = Longest Streak (max consecutive years with data)\n")
         f.write("Entities are sorted by ascending longest streak.\n")
-        if rows and rows[-1][0] == "Universal":
+        if "Universal" in matrix.index:
             f.write("The 'Universal' row shows full availability across all years.\n")
     
-    # Write .md file
+    # --- Write .md file ---
+    md_path = os.path.join(output_dir, f"{slug}-availability.md")
     with open(md_path, "w", encoding="utf-8") as f:
         f.write("# Data Availability Visualization\n\n")
         f.write(f"This visualization shows data availability across years {min_year}-{max_year} ")
-        f.write(f"for entities in the source file `{csv_path}`. ")
+        f.write(f"for entities in the source file `{args.csv_path}`. ")
         f.write(f"The grid displays {num_entities} entities with their availability patterns.\n\n")
         f.write("```\n")
         f.write("Entity          | LS | Availability by Year\n")
@@ -325,15 +325,68 @@ def write_outputs(
         f.write(f"- **Number of entities**: {num_entities}\n")
         f.write(f"- **Year range**: {min_year}-{max_year}\n")
         f.write(f"- **Total years**: {num_years}\n")
-        f.write(f"- **Tick interval**: {tick_interval} years\n")
+        f.write(f"- **Tick interval**: {args.tick_interval} years\n")
         f.write(f"- **Sorting**: Entities are sorted by shortest longest-streak first\n\n")
-        f.write("**Legend**: `█` = data available, ` ` (space) = data not available\n")
+        f.write(f"**Legend**: `{legend_glyph}` = data available, ` ` (space) = data not available\n")
         f.write("**LS** = Longest Streak (maximum consecutive years with data)\n\n")
-        if rows and rows[-1][0] == "Universal":
+        if "Universal" in matrix.index:
             f.write("The **Universal** row shows complete availability across all years.\n")
     
-    print(f"Generated: {txt_path}")
-    print(f"Generated: {md_path}")
+    print(f"Generated text output: {txt_path}")
+    print(f"Generated Markdown output: {md_path}")
+
+
+def write_image_outputs(
+    matrix: pd.DataFrame,
+    output_dir: str,
+    slug: str,
+    args,
+):
+    """Generate image outputs (PNG/PDF) using Matplotlib/Seaborn."""
+    
+    # Use the binary matrix for the heatmap
+    image_matrix = matrix.copy().replace({1: 0, 0: 1}) # Flip 0/1 for better color mapping (1 is missing, 0 is available)
+    
+    # Heatmap visualization is ideal for professional data availability grids
+    plt.figure(figsize=(12, max(6, len(image_matrix) * 0.3)))
+    
+    # Generate the heatmap
+    ax = sns.heatmap(
+        image_matrix,
+        cmap="binary", # Binary map: white for available (0), black/grey for missing (1)
+        linewidths=0.5, # CRITICAL: Adds definite grid lines between cells
+        linecolor="gray",
+        cbar=False, # No color bar needed
+        xticklabels=matrix.columns.values,
+        yticklabels=matrix.index.values,
+        square=True,
+    )
+    
+    # Make the X-axis year ticks more visible
+    if args.tick_interval > 1:
+        # Only show labels at the tick interval positions
+        xtick_labels = [
+            label if year % args.tick_interval == 0 else ""
+            for year, label in zip(matrix.columns, ax.get_xticklabels())
+        ]
+        ax.set_xticklabels(xtick_labels)
+
+    ax.set_title(f"Data Availability for {slug} ({matrix.columns.min()}-{matrix.columns.max()})", fontsize=14)
+    ax.set_ylabel("Entities (Sorted by Shortest Streak)", fontsize=12)
+    ax.set_xlabel("Year", fontsize=12)
+    
+    plt.tight_layout()
+
+    # Save outputs based on requested formats
+    formats = [f.strip() for f in args.output_format.lower().split(",")]
+    
+    for fmt in formats:
+        if fmt in ("png", "pdf", "svg"):
+            output_path = os.path.join(output_dir, f"{slug}-availability.{fmt}")
+            plt.savefig(output_path)
+            print(f"Generated image output: {output_path}")
+
+    plt.close()
 
 
 def main():
@@ -346,12 +399,11 @@ def main():
     # Load CSV
     df, years, entity_col = load_csv_with_years(args.csv_path)
     
-    # Generate grid
-    rows, filtered_years = generate_grid(
+    # Generate core availability data (sorted entities and binary matrix)
+    entity_names, availability_matrix = generate_availability_data(
         df,
         years,
         entity_col,
-        args.glyph,
         include_universal,
         args.start_year,
         args.end_year,
@@ -361,20 +413,25 @@ def main():
     csv_filename = os.path.basename(args.csv_path)
     slug = os.path.splitext(csv_filename)[0]
     
-    # Write outputs
+    # Define output directory
     output_dir = os.path.join(
         os.path.dirname(__file__),
-        ""  # Current directory (analysis/data-availability/visuals/)
+        ""
     )
-    write_outputs(
-        rows,
-        filtered_years,
-        args.tick_interval,
-        output_dir,
-        slug,
-        args.csv_path,
-    )
+    os.makedirs(output_dir, exist_ok=True)
 
+    formats = [f.strip() for f in args.output_format.lower().split(",")]
+
+    # --- Generate Text/MD Outputs (If requested) ---
+    if "text" in formats or "md" in formats:
+        grid_lines, tick_line = generate_text_grid(entity_names, availability_matrix, args)
+        write_text_outputs(grid_lines, tick_line, availability_matrix, output_dir, slug, args)
+    
+    # --- Generate Image Outputs (If requested) ---
+    if "png" in formats or "pdf" in formats or "svg" in formats:
+        # Note: Image generation uses the raw matrix data (Entity x Year)
+        write_image_outputs(availability_matrix, output_dir, slug, args)
+        
 
 if __name__ == "__main__":
     main()
