@@ -76,13 +76,19 @@ jobs:
         run: |
           set -eux
           
-          # CRITICAL FIX: Determine CSV Path based on trigger (prevents errors on push)
+          # --- DIAGNOSTIC STEP: Print Python script version to log ---
+          echo "--- Content of generate_visuals.py on runner ---"
+          cat analysis/data-availability/visuals/generate_visuals.py
+          echo "------------------------------------------------"
+          
+          # --- CRITICAL FIX: Determine CSV Path based on trigger ---
           CSV_PATH="${{ github.event.inputs.csv_path }}"
           if [ -z "$CSV_PATH" ]; then
             CSV_PATH="xlsxConverted/csvFiles/dart-med-pop_decomp-dhi.csv" 
           fi
+          # --- END CRITICAL FIX ---
 
-          # Build the command, passing ALL arguments, including the new format and mode
+          # Build the command with new required arguments
           CMD="python analysis/data-availability/visuals/generate_visuals.py --csv-path $CSV_PATH --visualization-mode ${{ github.event.inputs.visualization_mode }} --output-format ${{ github.event.inputs.output_format }}"
           
           # Add optional arguments if provided
