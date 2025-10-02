@@ -232,3 +232,111 @@ The [LISSY](https://www.lisdatacenter.org/data-access/lissy/) system processes r
 - Refrain from using commands that violate security measures. Certain program syntax and commands may trigger system security alerts and interrupt traffic. Refer to the [FAQs](https://www.lisdatacenter.org/data-access/lissy/managing-lissy-jobs-and-listings-faqs/) for tips on avoiding disallowed commands under the question “What does set for review mean, and how can I avoid this?”.
 - Break up statistical queries into several smaller jobs, as jobs producing very long outputs may cause system congestion. If difficulties persist, contact [User Support](mailto:usersupport@lisdatacenter.org).
 - Debug your program before submitting it to [LISSY](https://www.lisdatacenter.org/data-access/lissy/), especially if you are unfamiliar with statistical package syntax. Debugging can be performed on your personal computer using [LISSY’s downloadable sample files](https://www.lisdatacenter.org/data-access/lissy/).
+
+# LIS Database
+
+The [Luxembourg Income Study Database (LIS)](https://www.lisdatacenter.org/) is the largest available income database of harmonized microdata, covering 52 countries across Europe, North America, Latin America, Africa, Asia, and Australasia, spanning five decades.
+
+Harmonized into a common framework ([2024 Template LIS User Guide](https://www.lisdatacenter.org/our-data/lis-database/)), [LIS](https://www.lisdatacenter.org/) datasets contain household- and person-level data ([List of Variables](https://www.lisdatacenter.org/our-data/lis-database/), [Printable version](https://www.lisdatacenter.org/our-data/lis-database/)) on labor income, capital income, pensions, public social benefits (excluding pensions), private transfers, taxes and contributions, demography, employment, and expenditures.
+
+## Content of LIS Flow Variables
+
+To provide detailed documentation, [LIS](https://www.lisdatacenter.org/) has published comprehensive content tables for the flow variables of each dataset, available in two downloadable Excel documents. The information is organized by country and, within each country, by year, offering users a thorough overview.
+
+- [How to read the tables](https://www.lisdatacenter.org/our-data/lis-database/)
+- [Flow Variables](https://www.lisdatacenter.org/our-data/lis-database/): Detailed information on the content of [LIS](https://www.lisdatacenter.org/) flow variables.
+- [Public Transfers by type (alternative set)](https://www.lisdatacenter.org/our-data/lis-database/): Detailed information on the content of [LIS](https://www.lisdatacenter.org/) variables for the alternative set of public transfers by type.
+
+Note: These documents are updated each time [LIS](https://www.lisdatacenter.org/) releases new datasets, including new countries, additional years for existing countries, and any revisions to previous data.
+
+## Generic Codebook and Extensive Documentation
+
+- For a generic codebook of [LIS Database](https://www.lisdatacenter.org/) variables’ names, definitions, codes, and comments, see [here](https://www.lisdatacenter.org/our-data/lis-database/).
+- For extensive documentation on the [LIS Database](https://www.lisdatacenter.org/), access [METIS](https://www.lisdatacenter.org/our-data/metis/).
+
+## List of LIS Datasets
+
+Note: The year given is the income reference year, corresponding to the year to which the income data pertain.
+
+Newly added datasets ([2025 Autumn Data Splash](https://www.lisdatacenter.org/our-data/lis-database/)) are listed in blue.  
+Forthcoming datasets are listed in red.
+
+| Country           | Historical Data | Wave I (~1980)       | Wave II (~1985)    | Wave III (~1990)   | Wave IV (~1995)    | Wave V (~2000)     | Wave VI (~2004)    | Wave VII (~2007)   | Wave VIII (~2010)  | Wave IX (~2013)   | Wave X (~2016)    | Wave XI (~2019)   | Wave XII (~2022)  | Wave XIII (~2025) |
+|-------------------|-----------------|----------------------|---------------------|---------------------|---------------------|---------------------|---------------------|---------------------|---------------------|-------------------|-------------------|-------------------|-------------------|-------------------|
+| Australia         |                 | AU81                 | AU85                | AU89                | AU95                | AU01                | AU03 AU04           | AU08                | AU10                | AU14              | AU16              | AU18 AU20         |                   |                   |
+| Austria           |                 |                      |                     |                     | AT94 AT95 AT96 AT97 | AT98 AT99 AT00      | AT03 AT04 AT05      | AT06 AT07 AT08      | AT09 AT10 AT11     | AT12 AT13 AT14    | AT15 AT16 AT17    | AT18 AT19 AT20    | AT21 AT22         |                   |
+| Belgium           |                 |                      | BE85                | BE88 BE92           | BE95 BE97           | BE00                | BE03 BE04 BE05      | BE06 BE07 BE08      | BE09 BE10 BE11     | BE12 BE13 BE14    | BE15 BE16 BE17    | BE18 BE19 BE20    | BE21              |                   |
+| Brazil            |                 | BR81 BR82            | BR83 BR84 BR85 BR86 BR87 | BR88 BR89 BR90 BR92 | BR93 BR95 BR96 BR97 | BR98 BR99 BR01 BR02 | BR03 BR04 BR05      | BR06 BR07 BR08      | BR09 BR11          | BR12 BR13 BR14    | BR15 BR16 BR17    | BR18 BR19 BR20    | BR21 BR22         |                   |
+| Bulgaria          |                 |                      |                     |                     |                     |                     |                     | BG07 BG08           | BG09 BG10 BG11      | BG12 BG13 BG14    | BG15 BG16 BG17    | BG18 BG19 BG20    | BG21 BG22         |                   |
+| Canada            | CA71 CA73 CA75 | CA77 CA79 CA81 CA82 | CA84 CA85 CA86 CA87 | CA88 CA89 CA90 CA91 CA92 | CA93 CA94 CA95 CA96 CA97 | CA98 CA99 CA00 CA01 CA02 | CA03 CA04 CA05 | CA06 CA07 CA08 | CA09 CA10 CA11 | CA12 CA13 CA14 | CA15 CA16 CA17 | CA18 CA19 CA20 | CA21              |                   |
+| Chile             |                 |                      |                     | CL90 CL92           | CL94 CL96           | CL98 CL00           | CL03                | CL06                | CL09 CL11          | CL13              | CL15 CL17         |                   |                   |                   |
+| China             |                 |                      |                     |                     |                     | CN02                |                     |                     |                     | CN13              |                   | CN18              |                   |                   |
+| Colombia          |                 |                      |                     |                     |                     | CO01 CO02           | CO03 CO04 CO05      | CO06 CO07 CO08      | CO09 CO10 CO11     | CO12 CO13 CO14    | CO15 CO16 CO17    | CO18 CO19 CO20    | CO21 CO22 CO23    |                   |
+| Czechia           |                 |                      |                     | CZ92                | CZ96                | CZ02                | CZ04 *CZ05          | *CZ06 CZ07 *CZ08    | *CZ09 CZ10 *CZ11   | *CZ12 CZ13 *CZ14  | *CZ15 CZ16 *CZ17  | *CZ18 *CZ19 *CZ20 | *CZ21 *CZ22 *CZ23 |                   |
+| Denmark           |                 |                      | DK87                | DK92                | DK95                | DK00                | DK04                | DK07                | DK10               | DK13              | DK15 DK16 DK17    | DK18 DK19 DK20    | DK21 DK22         |                   |
+| Dominican Rep.    |                 |                      |                     |                     |                     |                     |                     | DO07                |                     |                   |                   |                   |                   |                   |
+| Estonia           |                 |                      |                     |                     |                     | EE00                | EE04                | EE07                | EE10               | EE13              | EE16              |                   |                   |                   |
+| Finland           |                 |                      | FI87                | FI91                | FI95                | FI00                | FI04                | FI07                | FI10               | FI13              | FI16              |                   |                   |                   |
+| France            | FR70 FR75      | FR79                 | FR84                | FR90                | FR96 FR97           | FR98 FR99 FR00 FR01 FR02 | FR03 FR04 FR05 | FR06 FR07 FR08 | FR09 FR10 FR11 | FR12 FR13 FR14 | FR15 FR16 FR17 | FR18 FR19 FR20 | FR21              |                   |
+| **Mali**          |                 |                      |                     |                     |                     |                     |                     |                     | ML11               | ML13 ML14         | ML15 ML16 ML17    | ML18 ML19 ML20    |                   |                   |
+| Mexico            |                 |                      | MX84                | MX89 MX92           | MX94 MX96           | MX98 MX00 MX02      | MX04 MX05           | MX06 MX08           | MX10               | MX12 MX14         | MX16              | MX18 MX20         | MX22              |                   |
+| Netherlands       |                 |                      | NL83 NL87           | NL90                | NL93                | NL99                | NL04 NL05           | NL06 NL07 NL08      | NL09 NL10 NL11     | NL12 NL13 NL14    | NL15 NL16 NL17    | NL18 NL19 NL20    | NL21              |                   |
+| Norway            |                 | NO79                 | NO86                | NO91                | NO95                | NO00                | NO04                | NO07                | NO10               | NO13              | NO16              | NO19 NO20         | NO21 NO22         |                   |
+| Palestine         |                 |                      |                     |                     |                     |                     |                     |                     |                     |                   | PS17              |                   | PS23              |                   |
+| Panama            |                 |                      |                     |                     | *PA96 *PA97        | *PA98 *PA99 *PA00 *PA01 *PA02 | *PA03 *PA04 *PA05 | *PA06 PA07 *PA08 | *PA09 PA10 *PA11 | *PA12 PA13 *PA14 | *PA15 PA16 *PA17 | *PA18 *PA19 *PA20 | *PA21 *PA22       |                   |
+| Paraguay          |                 |                      |                     |                     | PY97                | PY99 PY00 PY02      | PY03 PY04 PY05      | PY06 PY07 PY08      | PY09 PY10 PY11     | PY12 PY13 PY14    | PY15 PY16 PY17    | PY18 PY19 PY20    | *PY21 *PY22       |                   |
+| Peru              |                 |                      |                     |                     |                     |                     | PE04 PE05           | PE06 PE07 PE08      | PE09 PE10 PE11     | PE12 PE13 PE14    | PE15 PE16 PE17    | PE18 PE19 *PE20   | PE21              |                   |
+| Poland            |                 |                      | PL86                | PL92                | PL95                | PL99                | PL04 PL05           | PL06 PL07 PL08      | PL09 PL10 PL11     | PL12 PL13 PL14    | PL15 PL16 PL17    | PL18 PL19 PL20    | PL21 PL22 PL23    |                   |
+| Romania           |                 |                      |                     |                     | RO95 RO97           |                     |                     | RO06 RO07 RO08      | RO09 RO10 RO11     | RO12 RO13 RO14    | RO15 RO16 RO17    | RO18 RO19 RO20    | RO21              |                   |
+| Russia            |                 |                      |                     |                     |                     | RU00                | RU04                | RU07                | RU10 RU11          | RU13 RU14         | RU15 RU16 RU17    | RU18 RU19 RU20    | RU21 RU22         |                   |
+| Serbia            |                 |                      |                     |                     |                     |                     |                     | RS06 RS07 RS08      | RS09 RS10 RS11     | RS12 RS13 RS14    | RS15 RS16 RS17    | RS18 RS19         | RS21 RS22         |                   |
+| Slovakia          |                 |                      |                     | SK92                | SK96                |                     | SK04                | SK07                | SK10               | SK13 SK14         | SK15 SK16 SK17    | SK18              |                   |                   |
+| Slovenia          |                 |                      |                     |                     | SI97                | SI99                | SI04                | SI07                | SI10               | SI12              | SI15              |                   |                   |                   |
+| South Africa      |                 |                      |                     |                     |                     |                     |                     | ZA08                | ZA10               | ZA12              | ZA15 ZA17         |                   |                   |                   |
+| South Korea       |                 |                      |                     |                     |                     |                     | KR06                | KR08                | KR10               | KR12 KR14         | KR16 KR17         | KR18 KR19 KR20    | KR21              |                   |
+| Spain             |                 | ES80                 | ES85                | ES90                | ES93 ES94 ES95 ES96 ES97 | ES98 ES99 ES00 | ES04 ES05 | ES06 ES07 ES08 | ES09 ES10 ES11 | ES12 ES13 ES14 | ES15 ES16 ES17 | ES18 ES19 ES20 | ES21 ES22       |                   |
+| Sweden            | SE75            | SE81                 | SE87                | SE92                | SE95                | SE00 SE01 SE02      | SE03 SE04 SE05      | SE06 SE07 SE08      | SE09 SE10 SE11     | SE12 SE13 SE14    | SE15 SE16 SE17    | SE18 SE19 SE20    | SE21              |                   |
+| Switzerland       |                 | CH82                 |                     | CH92                |                     | CH00 CH02           | CH04                | CH06 CH07 CH08      | CH09 CH10 CH11     | CH12 CH13 CH14    | CH15 CH16 CH17    | CH18 CH19 CH20    | CH21 CH22         |                   |
+| Taiwan            |                 | TW81                 | TW86                | TW91                | TW95 TW97           | TW00                | TW05                | TW07                | TW10               | TW13              | TW16 TW17         | TW18 TW19 TW20    | TW21              |                   |
+| United Kingdom    | UK68 UK69 UK70 UK71 UK72 UK73 UK74 UK75 UK76 UK77 | UK78 UK79 UK80 UK81 UK82 | UK83 UK84 UK85 UK86 UK87 | UK88 UK89 UK90 UK91 UK92 | UK93 UK94 UK95 UK96 UK97 | UK98 UK99 UK00 UK01 UK02 | UK03 UK04 UK05 | UK06 UK07 UK08 | UK09 UK10 UK11 | UK12 UK13 UK14 | UK15 UK16 UK17 | UK18 UK19 UK20 | UK21            |                   |
+| United States     | US63 US64 US65 US66 US67 US68 US69 US70 US71 US72 US73 US74 US75 US76 US77 | US78 US79 US80 US81 US82 | US83 US84 US85 US86 US87 | US88 US89 US90 US91 US92 | US93 US94 US95 US96 US97 | US98 US99 US00 US01 US02 | US03 US04 US05 | US06 US07 US08 | US09 US10 US11 | US12 US13 US14 | US15 US16 US17 | US18 US19 US20 | US21 US22 US23 |                   |
+| Uruguay           |                 |                      |                     |                     |                     |                     | UY04 UY05           | UY06 UY07 UY08      | UY09 UY10 UY11     | UY12 UY13 UY14    | UY15 UY16 UY17    | UY18 UY19         | UY22 UY23         | UY24              |
+| **Vietnam**       |                 |                      |                     |                     |                     |                     |                     | VN05 VN07           | VN09 VN11          | VN13              |                   |                   |                   |                   |
+
+**The inclusion of Ivory Coast, Mali, and Vietnam was accomplished through research agreements between the [Agence Française de Développement (AFD)](https://www.afd.fr/) and [LIS](https://www.lisdatacenter.org/). [LIS](https://www.lisdatacenter.org/) is grateful for this cooperation, which enabled these valuable additions.
+
+For convenience, [LIS](https://www.lisdatacenter.org/) uses short country/territory names—those commonly used in cross-national academia—in conjunction with standard two-letter [ISO abbreviations](https://www.iso.org/iso-3166-country-codes.html). This convention does not imply any opinion on the part of [LIS](https://www.lisdatacenter.org/) concerning the legal status of any country or territory. [LIS](https://www.lisdatacenter.org/) acknowledges that several supranational organizations may designate country/territory names that differ from those used by [LIS](https://www.lisdatacenter.org/), including:
+
+- [United Nations](https://www.un.org/)
+- [World Bank](https://www.worldbank.org/)
+- [International Labour Organization](https://www.ilo.org/)
+- [Organisation for Economic Co-operation and Development](https://www.oecd.org/)
+
+# Compare.It — LIS Comparability Tool
+
+[Compare.It](https://comparability.lisdatacenter.org/shiny/comparability/), the new Comparability Tool from [LIS](https://www.lisdatacenter.org/), aims to inform users about country-specific data comparability issues in a concise manner. The tool is an innovative addition to the [LIS METadata Information System (METIS)](https://www.lisdatacenter.org/our-data/metis/).
+
+[Access Compare.It](https://comparability.lisdatacenter.org/shiny/comparability/)
+
+Please note that [Compare.It](https://comparability.lisdatacenter.org/shiny/comparability/) is not intended for cross-country comparisons. For visualizing income and wealth indicators across countries and over time, users are advised to use [DART](https://www.lisdatacenter.org/data-access/dart/).
+
+
+## Compare.It Main Features
+
+- Displays the survey series harmonized in a country for the [Luxembourg Income Study (LIS) Database](https://www.lisdatacenter.org/) and the [Luxembourg Wealth Study (LWS) Database](https://www.lisdatacenter.org/data-access/lws/).
+- Documents methodological changes within a country’s survey series and major deviations from [LIS](https://www.lisdatacenter.org/) general harmonization practices.
+- Presents new country-level indicators: 1) coverage ratios of [LIS](https://www.lisdatacenter.org/) datasets versus [National Accounts](https://www.oecd.org/), and 2) inequality estimates with confidence intervals.
+- Enables users to access: 
+  1. Information about country-level consistency and limitations of [LIS](https://www.lisdatacenter.org/) harmonization efforts.
+  2. Visualization of inequality measures by the underlying country series.
+  3. Continuously updated comparisons between aggregated microdata and [National Accounts](https://www.oecd.org/) figures.
+
+Currently, the tool covers a subset of [LIS](https://www.lisdatacenter.org/) countries, with more countries to be gradually added.
+
+## What is this app for?
+
+This tool is designed to highlight issues related to the consistency and comparability of data series in the [LIS](https://www.lisdatacenter.org/) and [LWS](https://www.lisdatacenter.org/data-access/lws/) databases. It displays the survey series available in a country and identifies instances where methodological changes occurred within those series. Researchers should note breaks in series caused by switching surveys or interruptions within ongoing surveys.
+
+## How can I compare different countries?
+
+This tool is not intended for cross-country comparisons. For visualizing trends of indicators across countries, use the [LIS DART tool](https://www.lisdatacenter.org/data-access/dart/).
