@@ -1,0 +1,96 @@
+# HTML to Markdown Conversion Workflow
+#
+# This workflow automatically converts HTML files to GitHub-flavored Markdown
+# whenever HTML files are added or modified in the repository.
+#
+# Features:
+# - Triggers on push/pull_request for *.html files and manual workflow_dispatch
+# - Uses pandoc for robust HTML to Markdown conversion
+# - Automatically commits and pushes converted .md files
+# - Removes original .html files after conversion
+# - Prevents infinite loops using a skip marker in commit messages
+# - Supports both direct push mode (default) and PR mode (configurable)
+#
+# Configuration Options (modify env section below):
+# - PUSH_MODE: Set to "true" for direct push, "false" for PR mode (default: true)
+# - SKIP_MARKER: String to detect in commit messages to skip conversion (default: "[skip html-to-md] converter-bot")
+# - PANDOC_ARGS: Additional arguments to pass to pandoc (default: empty)
+#
+# To disable this workflow temporarily:
+# - Set SKIP_MARKER in your commit message when adding HTML files
+# - Or disable the workflow in the Actions tab
+#
+# To switch to PR mode instead of direct push:
+# - Change PUSH_MODE to "false" below
+# - Note: PR creation requires additional configuration
+
+name: Convert HTML to Markdown
+
+on:
+  # Trigger on push events that modify HTML files
+  push:
+    paths:
+      - '**/*.html'
+  
+  # Trigger on pull requests that modify HTML files
+  pull_request:
+    paths:
+      - '**/*.html'
+  
+  # Allow manual triggering from Actions tab
+  workflow_dispatch:
+
+# Grant write permissions to commit and push changes
+permissions:
+  contents: write
+
+jobs:
+  convert-html-to-md:
+    runs-on: ubuntu-latest
+    
+    # Environment variables for the conversion script
+    env:
+      SKIP_MARKER: "[skip html-to-md] converter-bot"
+      PUSH_MODE: "true"  # Set to "false" to create PR instead of pushing
+      PANDOC_ARGS: ""     # Add custom pandoc arguments here if needed
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # Fetch full history to check previous commit messages
+          fetch-depth: 0
+          # Use default token for pushing
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Install pandoc
+        run: |
+          echo "Installing pandoc..."
+          sudo apt-get update
+          sudo apt-get install -y pandoc
+          echo "Pandoc version:"
+          pandoc --version
+      
+      - name: Run HTML to Markdown conversion
+        run: |
+          echo "Starting HTML to Markdown conversion..."
+          bash scripts/convert-html-to-md.sh
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          SKIP_MARKER: ${{ env.SKIP_MARKER }}
+          PUSH_MODE: ${{ env.PUSH_MODE }}
+          PANDOC_ARGS: ${{ env.PANDOC_ARGS }}
+      
+      - name: Summary
+        if: always()
+        run: |
+          echo "=================================================="
+          echo "HTML to Markdown Conversion Workflow Summary"
+          echo "=================================================="
+          echo "Workflow event: ${{ github.event_name }}"
+          echo "Branch: ${{ github.ref }}"
+          echo "Actor: ${{ github.actor }}"
+          echo "Push mode: ${{ env.PUSH_MODE }}"
+          echo ""
+          echo "Status: Complete"
+          echo "Check the logs above for details on converted files."
