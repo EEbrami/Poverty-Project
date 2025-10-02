@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test HTML to Markdown Workflow</title>
+</head>
+<body>
+    <h1>Test HTML to Markdown Conversion</h1>
+    
+    <p>This is a <strong>test file</strong> to verify the GitHub Actions workflow works correctly.</p>
+    
+    <h2>Features to Test</h2>
+    <ul>
+        <li>Automatic conversion on push</li>
+        <li>Proper markdown formatting</li>
+        <li>Skip marker prevents infinite loops</li>
+    </ul>
+    
+    <h2>Expected Result</h2>
+    <p>After pushing this file, the workflow should:</p>
+    <ol>
+        <li>Detect the new HTML file</li>
+        <li>Convert it to <code>test-workflow.md</code></li>
+        <li>Remove this <code>test-workflow.html</code> file</li>
+        <li>Commit with skip marker</li>
+        <li>Not trigger again</li>
+    </ol>
+    
+    <p>Visit the <a href="https://github.com">GitHub repository</a> to see the results.</p>
+</body>
+</html>
