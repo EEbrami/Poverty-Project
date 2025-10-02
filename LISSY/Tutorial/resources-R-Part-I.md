@@ -2,29 +2,9 @@
 
 # LIS Self Teaching Package 2020 R version
 
-  
+## Part I: Inequality, poverty, and social policy
 
-Part I
-
-# Inequality, poverty, and social policy
-
-<img src="resources-R-Part-I_files/Image_001.png" title="C:\Users\paradowski\Desktop\Summer Workshop 2012\lislogosmall.png" width="135" height="123" alt="C:\Users\paradowski\Desktop\Summer Workshop 2012\lislogosmall.png" />
-
-<img src="resources-R-Part-I_files/Image_002.png" width="710" height="1122" alt="image" />
-
-<img src="resources-R-Part-I_files/Image_003.png" width="34" height="1122" alt="image" />
-
-<img src="resources-R-Part-I_files/Image_004.png" width="34" height="1122" alt="image" />
-
-  
-
-<img src="resources-R-Part-I_files/Image_005.png" width="633" height="31" alt="image" />
-
-Part I: Inequality, poverty, and social policy
-
-  
-
-#### Overall Plan and Structure of the Exercise
+### Overall Plan and Structure of the Exercise
 
   
 
@@ -34,7 +14,7 @@ Each exercise builds on the one that comes before it. It is intended that you wi
 
 The analysis shown here is simplified somewhat, compared to what might be done in an actual LIS Working Paper. Some choices have also been made in order to demonstrate particular aspects of the LIS data. However, these exercises provide a starting point for researchers who want to develop an analysis of the data based on their own research questions.
 
-#### Research Questions
+### Research Questions
 
   
 
@@ -78,7 +58,7 @@ Since the beginning of the LIS project, one of the most prominent objects of res
 
     - Which type of government policy has a larger impact on inequality and poverty in each country: taxes, social insurance, and universal benefits, or targeted social assistance?
 
-#### Before you begin
+### Before you begin
 
 <a href="https://www.lisdatacenter.org/wp-content/uploads/files/data-lis-guide.pdf" style=" color: #000009; font-family:Verdana, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 12pt;" target="_blank">Before you begin the exercises, take a look at the</a> <a href="https://www.lisdatacenter.org/wp-content/uploads/files/data-lis-guide.pdf" class="s7" target="_blank">2019 Template LIS User</a> <span style=" color: #0462C1; font-family:Verdana, sans-serif; font-style: normal; font-weight: normal; text-decoration: underline; font-size: 12pt;">Guide</span><span class="p">, which can be accessed through </span>LIS Website <span class="s9">→ </span>Our Data <span class="s9">→ </span>LIS Database<span class="p">. The User Guide provides an overview of the structure of LIS data and some data management practices, such as missing values policy and aggregation rules, which will be useful in working with LISSY.</span>
 
@@ -138,7 +118,7 @@ Contents
 
 1.  ## <span id="bookmark0">‌</span>Accessing the LIS Database: LISSY Interface
 
-    #### Goal
+    ### Goal
 
       
 
@@ -154,7 +134,7 @@ Contents
 
     <a href="https://webui.lisdatacenter.org/" class="s14" target="_blank">In this exercise we will use</a> <span style=" color: #0462C1; font-family:Verdana, sans-serif; font-style: normal; font-weight: normal; text-decoration: underline; font-size: 12pt;">LISSY interface</span> <span style=" color: #000;">to open a dataset and produce basic descriptive statistics.</span>
 
-    #### Activity
+    ### Activity
 
     Go to *LIS website* <a href="https://webui.lisdatacenter.org/" style=" color: #000009; font-family:Arial, sans-serif; font-style: italic; font-weight: normal; text-decoration: none; font-size: 12pt;" target="_blank">→</a> <a href="https://webui.lisdatacenter.org/" class="s16" target="_blank">Login</a> <span style=" color: #0462C1; font-family:Verdana, sans-serif; font-style: italic; font-weight: normal; text-decoration: underline; font-size: 12pt;">LISSY</span><span class="s17"> </span>tab with your LISSY account. Submit a simple program to display descriptive statistics (number of valid observations, mean, minimum, maximum) for the household-level income variable **dhi**, for Guatemala 2006. **dhi**, or disposable household income, contains the total monetary and non-monetary current income for the household, net of income taxes and social security contributions. It is a harmonised variable that is available for all datasets.
 
@@ -164,7 +144,7 @@ Contents
 
           
 
-        #### Guidelines
+        ### Guidelines
 
         - Once connected to LISSY Interface, there are three main tasks that may be carried out:
 
@@ -238,13 +218,13 @@ Contents
 
             
 
-          #### Program
+          ### Program
 
           df \<- read.LIS('gt06h') print(summary(df\$dhi, digits=10)) print(sum(!is.na(df\$dhi)))
 
             
 
-          #### Results
+          ### Results
 
             
 
@@ -291,7 +271,7 @@ Contents
 
 2.  ## <span id="bookmark1">‌</span>Sample selection and weighting
 
-    #### Goal
+    ### Goal
 
       
 
@@ -301,7 +281,7 @@ Contents
 
     Use of weights <span class="s13">- Comparative researchers are typically interested in the characteristics of national populations, not the samples provided. It is very important to understand and use sample weights correctly in order to get representative results for the total underlying population. This exercise shows the differences in statistics between the unweighted sample and the weighted population.</span>
 
-    #### Activity
+    ### Activity
 
       
 
@@ -331,7 +311,7 @@ Contents
 
               
 
-            #### Guidelines
+            ### Guidelines
 
             - The income concepts used for LIS income variables are defined in the Interactive METadata Information System (METIS).
 
@@ -363,7 +343,7 @@ Contents
 
     df \<- read.LIS(‘gt06’, labels=FALSE, subset=”complete.cases(dhi)”)
 
-    #### Program
+    ### Program
 
     wmean \<- function(x, weight) { y \<- x\[which(!is.na(x))\]
 
@@ -429,7 +409,7 @@ Contents
 
     }
 
-    #### Results
+    ### Results
 
       
 
@@ -934,7 +914,7 @@ Contents
 
     3.  How does applying the top and bottom code affect the mean and median of household income?
 
-        #### Guidelines
+        ### Guidelines
 
         - As we continue to build up to our final program, some of the code from the previous exercises will no longer be necessary. (For example, the code that produced the summary statistics in the previous exercise). You can choose to delete this code from your program in order to make it shorter. However, if you would like to keep a line code but stop it from being executed, simply place a <span class="s19">\# </span>before it.
 
@@ -948,7 +928,7 @@ Contents
 
           of analysis. Weigh by **hpopwgt** for variables which are intrinsically at the household level (e.g., **dhi**) and by **hpopwgt\*nhhmem** (to account for household size) for variables that are conceptually meaningful at the person level (e.g., per capita and equivalised income).
 
-          #### Program
+          ### Program
 
           wmean \<- function(x, weight= NULL) { if (is.null(weight))
 
@@ -1034,7 +1014,7 @@ Contents
 
           }
 
-          #### Results
+          ### Results
 
             
 
@@ -1190,7 +1170,7 @@ Contents
 
             - This function is derived from the <span class="s19">reldist </span><a href="http://cran.r-project.org/web/packages/reldist/" style=" color: #000009; font-family:Verdana, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 12pt;" target="_blank">package,</a> <span style=" color: #000080; font-family:Verdana, sans-serif; font-style: normal; font-weight: normal; text-decoration: underline; font-size: 12pt;">http://cran.r-</span> <a href="http://cran.r-project.org/web/packages/reldist/" style=" color: #000080; font-family:Verdana, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 12pt;" target="_blank"></a> <span style=" color: #000080; font-family:Verdana, sans-serif; font-style: normal; font-weight: normal; text-decoration: underline; font-size: 12pt;">project.org/web/packages/reldist/</span>.
 
-    #### Program
+    ### Program
 
     gini \<- function(x,weight) { ox \<- order(x)
 
@@ -1248,7 +1228,7 @@ Contents
 
     round(gini(df\$dhi , df\$hpopwgt) , digits = 4) round(gini(df\$cdhi, df\$hpopwgt\*df\$nhhmem), digits = 4) round(gini(df\$edhi, df\$hpopwgt\*df\$nhhmem), digits = 4)
 
-    #### Results
+    ### Results
 
       
 
@@ -1294,7 +1274,7 @@ Contents
 
     Once poor households are identified, you can create an indicator to help identify the proportion of poor households (or individuals) and to measure the level of poverty. The choice of the indicator used will mainly depend on the purpose of the research. In this exercise, we will calculate the relative poverty rates of households and individuals in the Guatemala 2006 data.
 
-    #### Activity
+    ### Activity
 
     1.  Add code to your program to produce an indicator for poverty.
 
@@ -1333,7 +1313,7 @@ Contents
 
     1.  Are there more poor *households* or more poor *individuals?* What can you infer from this?
 
-        #### Guidelines
+        ### Guidelines
 
         - From this point forward, we will be working exclusively with equivalised income, so the sections of your code relating to per-capita income can now be commented out or removed.
 
@@ -1347,7 +1327,7 @@ Contents
 
         - Whether your poverty rate is the proportion of *individuals* or *households* in poverty depends on which weighting you use. Use **hpopwgt** if you want to measure household poverty, and **hpopwgt\*nhhmem** if you are interested in individual poverty. If you use the individual-level weighting, you will produce the Head Count Ratio (HCR), which is the percentage of poor individuals in the total population.
 
-          #### Program
+          ### Program
 
             
 
@@ -1397,7 +1377,7 @@ Contents
 
           round(100 \* (sum((df\$edhi \< maxline \* wNtile(df\$edhi, df\$hpopwgt \* df\$nhhmem, 0.5)) \* df\$hpopwgt \* df\$nhhmem) / sum(df\$hpopwgt \* df\$nhhmem)), digits = 2)
 
-          #### Results
+          ### Results
 
             
 
@@ -1440,7 +1420,7 @@ Contents
 
 6.  ## <span id="bookmark5">‌</span>Comparing income concepts
 
-    #### Goal
+    ### Goal
 
     Now that we have calculated Gini coefficients and poverty rates based on equivalised household disposable income, we can easily apply this same code to three other income concepts: income before any taxes and government transfers, income after taxes, social insurance, and universal benefit transfers, and income after social assistance transfers. Starting from this exercise, we will also introduce some programming techniques which will make it easier to repeat a series of commands several times without having to repeat the code.
 
@@ -1450,7 +1430,7 @@ Contents
 
     Efficient programming techniques - <span class="p">This exercise also introduces some programming techniques that allow looping the same code over several variables.</span>
 
-    #### Activity
+    ### Activity
 
     As always, begin with the program you developed for the last exercise. Modify it to create three new income variables. The first, **mi**, is the sum of factor income (**hifactor**), private transfers (**hiprivate**) and private pensions (**hi33**). Because we are specifically interested in the role of *government* transfers, we add private transfers and private pensions to our measure of “market income” from labo ur and capital.
 
@@ -1539,7 +1519,7 @@ Contents
 
         - You can easily check whether this is the case by summing up the individua l components and the higher-level variable.
 
-          #### Program
+          ### Program
 
           gini \<- function(x, weight) { ox \<- order(x)
 
@@ -1613,7 +1593,7 @@ Contents
 
           }
 
-          #### Results
+          ### Results
 
             
 
@@ -1882,7 +1862,7 @@ Contents
 
     3.  In which countries do social assistance benefits do more to reduce poverty than social insurance plus universal benefits and taxes?
 
-        #### Guidelines
+        ### Guidelines
 
           
 
@@ -1922,7 +1902,7 @@ Contents
 
           }
 
-          #### Program
+          ### Program
 
           gini \<- function(x,weight) { ox \<- order(x)
 
@@ -2016,7 +1996,7 @@ Contents
 
           }
 
-          #### Results
+          ### Results
 
           Gini Coefficient
 
@@ -2168,7 +2148,7 @@ Contents
 
 8.  ## <span id="bookmark7">‌</span>Producing compact and concise output
 
-    #### Goal
+    ### Goal
 
       
 
@@ -2208,7 +2188,7 @@ Contents
 
     <a href="#bookmark8" style=" color: #000009; font-family:Verdana, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 12pt;">This will create output like that shown</a> <span style=" color: #0462C1; font-family:Verdana, sans-serif; font-style: normal; font-weight: normal; text-decoration: underline; font-size: 12pt;">below</span>.
 
-    #### Program
+    ### Program
 
     gini \<- function(x,weight) { ox \<- order(x)
 
@@ -2330,7 +2310,7 @@ Contents
 
 9.  ## <span id="bookmark9">‌</span>Producing graphs with LISSY
 
-    #### Goal
+    ### Goal
 
     This exercise introduces LISSY’s graphing feature that allows users to generate, display and export graphs based on LIS data. Your goal is to visually compare income inequality across different countries, using our variable for disposable household income (**dhi**).
 
@@ -2404,7 +2384,7 @@ lissy_datasets %\>%
 
 plot_lorenz_curve(variable = "dhi", na.rm = TRUE, plot_theme = "lis")
 
-#### Program
+### Program
 
 \# Prepare session library(readr) library(dplyr) library(magrittr) library(purrr) library(ggplot2)
 
