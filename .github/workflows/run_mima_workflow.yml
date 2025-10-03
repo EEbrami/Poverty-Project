@@ -1,0 +1,84 @@
+name: MIMA Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      ma-number:
+        description: 'MA window size (N). Must be between 2 and 7.'
+        default: 5
+        required: true
+        type: number
+      countries:
+        description: 'Comma-separated country names (e.g., Canada,Germany,Luxembourg,United Kingdom,United States)'
+        default: 'Canada,Germany,Luxembourg,United Kingdom,United States'
+        required: true
+        type: string
+      start-year:
+        description: 'Start year of the time period (inclusive)'
+        default: 1985
+        required: true
+        type: number
+      end-year:
+        description: 'End year of the time period (inclusive)'
+        default: 2021
+        required: true
+        type: number
+      input-path:
+        description: 'Path to the input CSV file (relative to repo root)'
+        default: 'xlsxConverted/csvFiles/dart-med-pop_decomp-dhi.csv'
+        required: true
+        type: string
+      output-path:
+        description: 'Directory path where MIMA/ folder will be created'
+        default: 'DART'
+        required: true
+        type: string
+
+jobs:
+  run-mima:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas numpy matplotlib
+      
+      - name: Run MIMA computation
+        run: |
+          python compute_mima.py \
+            --ma-number ${{ github.event.inputs.ma-number }} \
+            --countries "${{ github.event.inputs.countries }}" \
+            --start-year ${{ github.event.inputs.start-year }} \
+            --end-year ${{ github.event.inputs.end-year }} \
+            --input-path "${{ github.event.inputs.input-path }}" \
+            --output-path "${{ github.event.inputs.output-path }}"
+      
+      - name: Commit results if changed
+        run: |
+          set -eux
+          
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
+          # Add MIMA outputs
+          git add "${{ github.event.inputs.output-path }}/MIMA/" || true
+          
+          if ! git diff --cached --quiet; then
+            git commit -m "MIMA: MA${{ github.event.inputs.ma-number }} computation for ${{ github.event.inputs.start-year }}-${{ github.event.inputs.end-year }}"
+            git push
+          else
+            echo "No changes to commit."
+          fi
