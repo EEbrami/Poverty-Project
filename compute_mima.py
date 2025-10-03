@@ -206,11 +206,12 @@ def compute_centered_ma(series: pd.Series, n: int, min_periods: int = 3) -> pd.S
     Args:
         series: Time series data
         n: Window size
-        min_periods: Minimum number of non-NaN values required
+        min_periods: Minimum number of non-NaN values required (will be capped at n)
     
     Returns:
         Series with centered MA values
     """
+    min_periods = min(min_periods, n)
     return series.rolling(window=n, center=True, min_periods=min_periods).mean()
 
 
@@ -221,11 +222,12 @@ def compute_trailing_ma(series: pd.Series, n: int, min_periods: int = 3) -> pd.S
     Args:
         series: Time series data
         n: Window size
-        min_periods: Minimum number of non-NaN values required
+        min_periods: Minimum number of non-NaN values required (will be capped at n)
     
     Returns:
         Series with trailing MA values
     """
+    min_periods = min(min_periods, n)
     return series.rolling(window=n, center=False, min_periods=min_periods).mean()
 
 
@@ -238,7 +240,7 @@ def compute_weighted_ma(series: pd.Series, n: int, min_periods: int = 3) -> pd.S
     Args:
         series: Time series data
         n: Window size (must be odd)
-        min_periods: Minimum number of non-NaN values required
+        min_periods: Minimum number of non-NaN values required (will be capped at n)
     
     Returns:
         Series with weighted MA values, or None if n is even
@@ -246,6 +248,7 @@ def compute_weighted_ma(series: pd.Series, n: int, min_periods: int = 3) -> pd.S
     if n % 2 == 0:
         return None  # Skip for even n
     
+    min_periods = min(min_periods, n)
     weights = triangular_weights(n)
     half = n // 2
     
@@ -358,7 +361,7 @@ def create_metadata_log(
         f.write(f"Input File: {args.input_path}\n")
         f.write(f"Output Path: {args.output_path}\n")
         f.write(f"Interpolation Limit: 2 years\n")
-        f.write(f"Minimum Required Values per Window: 3\n\n")
+        f.write(f"Minimum Required Values per Window: {min(3, args.ma_number)}\n\n")
         
         f.write("DATA PREPROCESSING:\n")
         f.write("-" * 80 + "\n")
