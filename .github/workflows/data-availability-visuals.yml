@@ -146,6 +146,9 @@ jobs:
             # Commit the local changes
             git commit -m "Update generated visualizations for ${{ github.event.inputs.csv_path }}"
 
+            # **CRITICAL FIX**: Pull the latest changes from the remote branch
+            git pull origin ${{ github.ref_name }}
+
             # Force push with lease to overwrite generated artifacts
             git push origin ${{ github.ref_name }} --force-with-lease
           else
