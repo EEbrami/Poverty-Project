@@ -50,3 +50,7 @@ Thumbs.db
 analysis/data-availability/results/*.json
 analysis/data-availability/results/multiple-rows/
 analysis/data-availability/summary.md
+
+# MIMA outputs (keep only README)
+DART/MIMA/csv/
+DART/MIMA/visualizations/
