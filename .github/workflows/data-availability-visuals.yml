@@ -101,10 +101,10 @@ jobs:
 
           # Conditionally add ALL optional arguments IF they have a value
           if [ -n "${{ github.event.inputs.variables }}" ]; then
-            CMD="$CMD --variables ${{ github.event.inputs.variables }}"
+            CMD="$CMD --variables \"${{ github.event.inputs.variables }}\""
           fi
           if [ -n "${{ github.event.inputs.countries }}" ]; then
-            CMD="$CMD --countries ${{ github.event.inputs.countries }}"
+            CMD="$CMD --countries \"${{ github.event.inputs.countries }}\""
           fi
           if [ -n "${{ github.event.inputs.start_year }}" ]; then
             CMD="$CMD --start-year ${{ github.event.inputs.start_year }}"
