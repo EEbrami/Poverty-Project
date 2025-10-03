@@ -1,0 +1,53 @@
+File,Name,Label,Codes,Definition,Notes / comments
+H & I,HID,household identifier,,Unique (within dataset) household number.,"For confidentiality reasons, this identifier differs from the original one.
+Necessary when merging household and person file.  This identifier is unique only within each country/year dataset; when combining different countries or years it is necessary to use it in combination with the variable DID in order to uniquely identify households."
+H & I,WAVE,data wave,"0 Historical Wave
+1 Wave I
+2 Wave II
+3 Wave III
+4 Wave IV
+5 Wave V
+6 Wave VI
+7 Wave VII
+8 Wave VIII
+9 Wave IX
+10 Wave X
+11 Wave XI
+12 Wave XII",Indicator of the LIS wave to which the dataset belongs.,"The LIS waves include datasets with the following income reference years:
+Historical Wave: before 1978
+Wave I : 1978-1982
+Wave II: 1983-1987
+Wave III: 1988-1992
+Wave IV: 1993-1997
+Wave V: 1998-2002 
+Wave VI: 2003-2005
+Wave VII: 2006-2008
+Wave VIII: 2009-2011
+Wave IX: 2012-2014
+Wave X: 2015-2017
+Wave XI: 2018-2020
+Wave XII: 2021-2023
+Wave XIII: 2024-2026
+Please note that the income reference year may differ from the year following which the survey was named by the data provider, and/or the year in which the survey was conducted."
+H,HPOPWGT,household weight,,Population household cross-sectional weight: this weight inflates the result to reflect the total household population covered by the dataset.,"This variable is always filled for all observations. 
+Always use the weight in your analysis in order to get results representative of the total population.
+In case of multi-country analysis, the inflated weight should be chosen if each country is intended to count in the final results proportionately to its population size."
+I,PPOPWGT,person weight,,Population individual cross-sectional weight: this weight inflates the result to reflect the total individual population covered by the dataset.,"This variable is always filled for all observations. In many datasets the individual and the household-level weight are the same.
+Always use the individual weight in your individual level analysis in order to get results representative of the total individual population.
+In case of multi-country analysis, the inflated weight should be chosen if each country is intended to count in the final results proportionately to its population size."
+H,HWGT,normalised household weight,,"Household-level cross-sectional weight, normalised to 10,000 by country.","This variable is always filled for all observations. 
+Always use the household weight in your household level analysis in order to get results representative of the total household population.
+In case of multi-country analysis, the normalized weight should be chosen if each country is intended to have the same weight."
+I,PWGT,normalised person weight,,"Individual-level cross-sectional weight, normalised to 10,000 by country.","This variable is always filled for all observations. In many datasets the individual and the household-level weight are the same.
+Always use the individual weight in your individual level analysis in order to get results representative of the total individual population.
+In case of multi-country analysis, the normalized weight should be chosen if each country is intended to have the same weight."
+H,HWGTA,additional household weight,,Additional household level weight calculated for a selected sub-sample of households.,This variable contains an additional household level weight in case only part of the household sample has been selected for some variables. This weight should be used only in connection with the sub-sample for which it was created.
+I,PWGTA,additional person weight,,Additional individual level weight calculated for a selected sub-sample of individuals.,This variable contains an additional individual level weight in case only part of the individual sample has been selected for some variables.
+H & I,GROSSNET,gross/net income information,". missing
+100 gross, taxes and contributions fully captured
+110 gross, taxes and contributions collected
+120 gross, taxes and contributions imputed
+200 net, taxes and contributions not captured
+300 mixed, taxes and contributions insufficiently captured
+310 mixed, total income account for full taxes and contributions, subcomponents do not
+320 mixed, total income does not account for full taxes and contributions","Information on whether the current incomes reported in the dataset are gross of taxes and social security contributions (i.e. taxes and contributions fully captured), net (i.e. taxes and contributions not captured) or any in-between situation (i.e.  taxes and contributions insufficiently captured); in case they are gross, further information was given (if available) on whether the taxes and social security contributions have been collected or imputed.",-

@@ -1,0 +1,74 @@
+[
+  {
+    "File":"H & I",
+    "Name":"HID",
+    "Label":"household identifier",
+    "Codes":null,
+    "Definition":"Unique (within dataset) household number.",
+    "Notes \/ comments":"For confidentiality reasons, this identifier differs from the original one.\nNecessary when merging household and person file.  This identifier is unique only within each country\/year dataset; when combining different countries or years it is necessary to use it in combination with the variable DID in order to uniquely identify households."
+  },
+  {
+    "File":"H & I",
+    "Name":"WAVE",
+    "Label":"data wave",
+    "Codes":"0 Historical Wave\n1 Wave I\n2 Wave II\n3 Wave III\n4 Wave IV\n5 Wave V\n6 Wave VI\n7 Wave VII\n8 Wave VIII\n9 Wave IX\n10 Wave X\n11 Wave XI\n12 Wave XII",
+    "Definition":"Indicator of the LIS wave to which the dataset belongs.",
+    "Notes \/ comments":"The LIS waves include datasets with the following income reference years:\nHistorical Wave: before 1978\nWave I : 1978-1982\nWave II: 1983-1987\nWave III: 1988-1992\nWave IV: 1993-1997\nWave V: 1998-2002 \nWave VI: 2003-2005\nWave VII: 2006-2008\nWave VIII: 2009-2011\nWave IX: 2012-2014\nWave X: 2015-2017\nWave XI: 2018-2020\nWave XII: 2021-2023\nWave XIII: 2024-2026\nPlease note that the income reference year may differ from the year following which the survey was named by the data provider, and\/or the year in which the survey was conducted."
+  },
+  {
+    "File":"H",
+    "Name":"HPOPWGT",
+    "Label":"household weight",
+    "Codes":null,
+    "Definition":"Population household cross-sectional weight: this weight inflates the result to reflect the total household population covered by the dataset.",
+    "Notes \/ comments":"This variable is always filled for all observations. \nAlways use the weight in your analysis in order to get results representative of the total population.\nIn case of multi-country analysis, the inflated weight should be chosen if each country is intended to count in the final results proportionately to its population size."
+  },
+  {
+    "File":"I",
+    "Name":"PPOPWGT",
+    "Label":"person weight",
+    "Codes":null,
+    "Definition":"Population individual cross-sectional weight: this weight inflates the result to reflect the total individual population covered by the dataset.",
+    "Notes \/ comments":"This variable is always filled for all observations. In many datasets the individual and the household-level weight are the same.\nAlways use the individual weight in your individual level analysis in order to get results representative of the total individual population.\nIn case of multi-country analysis, the inflated weight should be chosen if each country is intended to count in the final results proportionately to its population size."
+  },
+  {
+    "File":"H",
+    "Name":"HWGT",
+    "Label":"normalised household weight",
+    "Codes":null,
+    "Definition":"Household-level cross-sectional weight, normalised to 10,000 by country.",
+    "Notes \/ comments":"This variable is always filled for all observations. \nAlways use the household weight in your household level analysis in order to get results representative of the total household population.\nIn case of multi-country analysis, the normalized weight should be chosen if each country is intended to have the same weight."
+  },
+  {
+    "File":"I",
+    "Name":"PWGT",
+    "Label":"normalised person weight",
+    "Codes":null,
+    "Definition":"Individual-level cross-sectional weight, normalised to 10,000 by country.",
+    "Notes \/ comments":"This variable is always filled for all observations. In many datasets the individual and the household-level weight are the same.\nAlways use the individual weight in your individual level analysis in order to get results representative of the total individual population.\nIn case of multi-country analysis, the normalized weight should be chosen if each country is intended to have the same weight."
+  },
+  {
+    "File":"H",
+    "Name":"HWGTA",
+    "Label":"additional household weight",
+    "Codes":null,
+    "Definition":"Additional household level weight calculated for a selected sub-sample of households.",
+    "Notes \/ comments":"This variable contains an additional household level weight in case only part of the household sample has been selected for some variables. This weight should be used only in connection with the sub-sample for which it was created."
+  },
+  {
+    "File":"I",
+    "Name":"PWGTA",
+    "Label":"additional person weight",
+    "Codes":null,
+    "Definition":"Additional individual level weight calculated for a selected sub-sample of individuals.",
+    "Notes \/ comments":"This variable contains an additional individual level weight in case only part of the individual sample has been selected for some variables."
+  },
+  {
+    "File":"H & I",
+    "Name":"GROSSNET",
+    "Label":"gross\/net income information",
+    "Codes":". missing\n100 gross, taxes and contributions fully captured\n110 gross, taxes and contributions collected\n120 gross, taxes and contributions imputed\n200 net, taxes and contributions not captured\n300 mixed, taxes and contributions insufficiently captured\n310 mixed, total income account for full taxes and contributions, subcomponents do not\n320 mixed, total income does not account for full taxes and contributions",
+    "Definition":"Information on whether the current incomes reported in the dataset are gross of taxes and social security contributions (i.e. taxes and contributions fully captured), net (i.e. taxes and contributions not captured) or any in-between situation (i.e.  taxes and contributions insufficiently captured); in case they are gross, further information was given (if available) on whether the taxes and social security contributions have been collected or imputed.",
+    "Notes \/ comments":"-"
+  }
+]

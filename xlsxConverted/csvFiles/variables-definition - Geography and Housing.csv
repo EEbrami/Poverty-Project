@@ -1,0 +1,20 @@
+File,Name,Label,Codes,Definition,Notes / comments
+H,OWN,main residence tenure status,". missing
+100 owned
+110 owned outright
+120 owned with mortgage
+200 not owned
+210 rented
+211 rented at market price
+212 rented below market price
+220 free housing","Indicator of housing tenure distinguishing between owned and non-owned dwelling. If additional information is available, further distinctions are made among homeowners, identifying those still paying a mortgage versus those who own their home outright. For non-owners, a distinction is made between those paying rent (either at market price or below market price) and those living rent-free.","Note that the 'below market price' category refers to households paying rent lower than the market rate, and does not identify households receiving housing subsidies or allowances."
+H,DWELTYP,type of dwelling,". missing
+100 house
+110 detached house
+120 non-detached house
+200 multi-unit residential building
+210 apartment/flat
+220 other multi-unit
+300 other type of dwelling
+310 movable dwelling
+320 informal dwelling",Type of housing (building) where the household resides.,-

@@ -1,0 +1,50 @@
+File,Name,Label,Codes,Definition,Notes / comments
+I,PARTNER,living with partner,". missing
+0 not living with partner
+1 living with partner",Variable indicating whether the person is living with a partner. The term 'partner' refers to a legal  partner (spouse or registered civil partner) or a cohabiting partner living in the same household.,"If the variable PARTNUM is not available for all household members, the information is only available for the reference person and  his/her partner based on variable RELATION."
+H,HPARTNER,household reference person living with partner,". missing
+0 reference person not living with partner
+1 reference person living with partner","Variable indicating whether the reference person lives with a partner, including both spouses/civil partners and cohabiting partners.",-
+H,NEARN,number of household members with labour income,"0 no hh member with labour income
+1 1 hh member with labour income
+2 2 hh members with labour income
+3 3 hh members with labour income
+4 4 hh members with labour income
+5 5 hh members with labour income
+6 6 hh members with labour income
+7 7 hh members with labour income
+8 8 hh members with labour income
+9 9 hh members with labour income
+10 10 hh members with labour income
+11 11 hh members with labour income
+12 12 hh members with labour income
+13 13 hh members with labour income
+14 14 hh members with labour income
+15 15 hh members with labour income
+16 16 hh members with labour income
+17 17 hh members with labour income
+18 18 hh members with labour income
+19 19 hh members with labour income
+...",Number of household members with incomes from labour during the income reference period (see variables pilabour for the definition of labour income).,-
+I,NCHILDREN,number of own children living in household,"0 not living with own children
+1 living with 1 own child
+2 living with 2 own children
+3 living with 3 own children
+4 living with 4 own children
+5 living with 5 own children
+6 living with 6 own children
+7 living with 7 own children
+8 living with 8 own children
+9 living with 9 own children
+10 living with 10 own children
+11 living with 11 own children
+12 living with 12 own children
+13 living with 13 own children
+14 living with 14 own children
+15 living with 15 own children
+16 living with 16 own children
+17 living with 17 own children
+18 living with 18 own children
+19 living with 19 own children
+...",Number of own children living in the same household.,Please be aware that the information is often available only for the reference person and his/her partner.
+I,AGEYOCH,age of youngest own child living in household,,Age of youngest own child living in the household.,Please be aware that the information is often available only for head and spouse.

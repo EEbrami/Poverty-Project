@@ -1,0 +1,18 @@
+[
+  {
+    "File":"H",
+    "Name":"OWN",
+    "Label":"main residence tenure status",
+    "Codes":". missing\n100 owned\n110 owned outright\n120 owned with mortgage\n200 not owned\n210 rented\n211 rented at market price\n212 rented below market price\n220 free housing",
+    "Definition":"Indicator of housing tenure distinguishing between owned and non-owned dwelling. If additional information is available, further distinctions are made among homeowners, identifying those still paying a mortgage versus those who own their home outright. For non-owners, a distinction is made between those paying rent (either at market price or below market price) and those living rent-free.",
+    "Notes \/ comments":"Note that the 'below market price' category refers to households paying rent lower than the market rate, and does not identify households receiving housing subsidies or allowances."
+  },
+  {
+    "File":"H",
+    "Name":"DWELTYP",
+    "Label":"type of dwelling",
+    "Codes":". missing\n100 house\n110 detached house\n120 non-detached house\n200 multi-unit residential building\n210 apartment\/flat\n220 other multi-unit\n300 other type of dwelling\n310 movable dwelling\n320 informal dwelling",
+    "Definition":"Type of housing (building) where the household resides.",
+    "Notes \/ comments":"-"
+  }
+]

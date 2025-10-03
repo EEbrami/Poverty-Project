@@ -1,0 +1,42 @@
+[
+  {
+    "File":"I",
+    "Name":"PARTNER",
+    "Label":"living with partner",
+    "Codes":". missing\n0 not living with partner\n1 living with partner",
+    "Definition":"Variable indicating whether the person is living with a partner. The term 'partner' refers to a legal  partner (spouse or registered civil partner) or a cohabiting partner living in the same household.",
+    "Notes \/ comments":"If the variable PARTNUM is not available for all household members, the information is only available for the reference person and  his\/her partner based on variable RELATION."
+  },
+  {
+    "File":"H",
+    "Name":"HPARTNER",
+    "Label":"household reference person living with partner",
+    "Codes":". missing\n0 reference person not living with partner\n1 reference person living with partner",
+    "Definition":"Variable indicating whether the reference person lives with a partner, including both spouses\/civil partners and cohabiting partners.",
+    "Notes \/ comments":"-"
+  },
+  {
+    "File":"H",
+    "Name":"NEARN",
+    "Label":"number of household members with labour income",
+    "Codes":"0 no hh member with labour income\n1 1 hh member with labour income\n2 2 hh members with labour income\n3 3 hh members with labour income\n4 4 hh members with labour income\n5 5 hh members with labour income\n6 6 hh members with labour income\n7 7 hh members with labour income\n8 8 hh members with labour income\n9 9 hh members with labour income\n10 10 hh members with labour income\n11 11 hh members with labour income\n12 12 hh members with labour income\n13 13 hh members with labour income\n14 14 hh members with labour income\n15 15 hh members with labour income\n16 16 hh members with labour income\n17 17 hh members with labour income\n18 18 hh members with labour income\n19 19 hh members with labour income\n...",
+    "Definition":"Number of household members with incomes from labour during the income reference period (see variables pilabour for the definition of labour income).",
+    "Notes \/ comments":"-"
+  },
+  {
+    "File":"I",
+    "Name":"NCHILDREN",
+    "Label":"number of own children living in household",
+    "Codes":"0 not living with own children\n1 living with 1 own child\n2 living with 2 own children\n3 living with 3 own children\n4 living with 4 own children\n5 living with 5 own children\n6 living with 6 own children\n7 living with 7 own children\n8 living with 8 own children\n9 living with 9 own children\n10 living with 10 own children\n11 living with 11 own children\n12 living with 12 own children\n13 living with 13 own children\n14 living with 14 own children\n15 living with 15 own children\n16 living with 16 own children\n17 living with 17 own children\n18 living with 18 own children\n19 living with 19 own children\n...",
+    "Definition":"Number of own children living in the same household.",
+    "Notes \/ comments":"Please be aware that the information is often available only for the reference person and his\/her partner."
+  },
+  {
+    "File":"I",
+    "Name":"AGEYOCH",
+    "Label":"age of youngest own child living in household",
+    "Codes":null,
+    "Definition":"Age of youngest own child living in the household.",
+    "Notes \/ comments":"Please be aware that the information is often available only for head and spouse."
+  }
+]
