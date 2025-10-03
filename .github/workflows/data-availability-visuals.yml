@@ -3,14 +3,14 @@ name: Data Availability Visuals
 on:
   push:
     branches:
-      - '**' # General trigger: Runs on push to any branch for visibility and testing.
+      - '**'
     paths:
       - '.github/workflows/data-availability-visuals.yml'
 
   workflow_dispatch:
     inputs:
       csv_path:
-        description: 'Path to the input CSV within the repo (e.g., xlsxConverted/csvFiles/dart-med-pop_decomp-dhi.csv)'
+        description: 'Path to the input CSV within the repo (e.g., xlsxConverted/csvFiles/our-lis-documentation-availability-matrix.csv)'
         required: true
         type: string
         default: 'xlsxConverted/csvFiles/our-lis-documentation-availability-matrix.csv'
@@ -83,23 +83,19 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          # Installing packages for image generation, data handling, and country code conversion
           pip install pandas numpy matplotlib seaborn pycountry
 
       - name: Generate visualizations
         run: |
           set -eux
 
-          # Determine CSV Path based on trigger
           CSV_PATH="${{ github.event.inputs.csv_path }}"
           if [ -z "$CSV_PATH" ]; then
             CSV_PATH="xlsxConverted/csvFiles/our-lis-documentation-availability-matrix.csv"
           fi
 
-          # Start CMD with the mandatory CSV Path
           CMD="python analysis/data-availability/generate_visulas.py --csv-path $CSV_PATH"
 
-          # Conditionally add ALL optional arguments IF they have a value
           if [ -n "${{ github.event.inputs.variables }}" ]; then
             CMD="$CMD --variables \"${{ github.event.inputs.variables }}\""
           fi
@@ -128,28 +124,20 @@ jobs:
             CMD="$CMD --output-format ${{ github.event.inputs.output_format }}"
           fi
 
-          # Execute the command
           eval $CMD
 
       - name: Commit and push visualization outputs
         run: |
           set -eux
 
-          # Set Git credentials for the bot
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          # Add ALL generated files from the visuals directory.
           git add analysis/data-availability/visuals/* || true
 
           if ! git diff --cached --quiet; then
-            # Commit the local changes
             git commit -m "Update generated visualizations for ${{ github.event.inputs.csv_path }}"
-
-            # **CRITICAL FIX**: Pull the latest changes from the remote branch
             git pull origin ${{ github.ref_name }}
-
-            # Force push with lease to overwrite generated artifacts
             git push origin ${{ github.ref_name }} --force-with-lease
           else
             echo "No changes to commit."
