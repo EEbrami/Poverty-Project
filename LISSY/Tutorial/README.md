@@ -2,7 +2,7 @@
 
 ## What is LISSY?
 
-LISSY is a remote-execution system that allows researchers to access [LIS](https://www.lisdatacenter.org/) and [LWS](https://www.lisdatacenter.org/data-access/lws/) microdata from a remote location while adhering to the privacy restrictions mandated by the countries providing the data. It offers secure access to the microdata through a web-based [Job Submission Interface](https://www.lisdatacenter.org/data-access/lissy/).
+LISSY is a remote-execution system that allows researchers to access [LIS](https://www.lisdatacenter.org/) and [LWS](https://www.lisdatacenter.org/data-access/lws/) microdata from a remote location while adhering to the privacy restrictions mandated by the countries providing the data. It offers secure access to the microdata through a web-based [Job Submission Interface](https://www.lisdatacenter.org/data-access/lissy/syntax/).
 
 ## How to Register for LISSY?
 
@@ -16,9 +16,27 @@ Users write and submit statistical programs written in [R](https://www.r-project
 
 To ensure proper processing of user requests, LISSY requires a few exceptions to the standard statistical program syntax.
 
-[Self-Teaching Materials](https://www.lisdatacenter.org/resources/self-teaching/)
+- Detailed documentation on the LIS/LWS Databases can be found online through METIS: \
+[http://www.lisdatacenter.org/frontend](http://www.lisdatacenter.org/frontend)
+
+- To get acquainted with the LIS data, please have a look at our self-teaching materials: \
+[http://www.lisdatacenter.org/resources/self-teaching/](http://www.lisdatacenter.org/resources/self-teaching/)
+
+- Check out our FAQ to see if your questions are addressed there: \
+[http://www.lisdatacenter.org/resources/faq/](http://www.lisdatacenter.org/resources/faq/)
+
+- For remaining questions, feel free to contact our user support: \
+[usersupport@lisdatacenter.org](usersupport@lisdatacenter.org)
+
+
+
 
 ## LIS’ Rules for Citation
+
+
+All papers that use LIS microdata must be submitted for inclusion in the LIS Working Paper series before they are published in books, journals or other venues. Please look for further information on our General Policies and Practices webpage: [http://www.lisdatacenter.org/working-papers/#general](http://www.lisdatacenter.org/working-papers/#general)
+
+[Privacy Policy](https://www.lisdatacenter.org/about-lis/terms-of-use/)
 
 Users of the [LIS](https://www.lisdatacenter.org/) or [LWS](https://www.lisdatacenter.org/data-access/lws/) microdata are required to cite the data source in their list of references. As recommended by the [Chicago Manual of Style](https://www.chicagomanualofstyle.org/) (15th edition, 2007, pp. 753-754, 17.358), LIS requests that authors use the following format.
 
