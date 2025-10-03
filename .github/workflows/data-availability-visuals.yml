@@ -87,7 +87,7 @@ jobs:
           fi
 
           # Start CMD with the mandatory CSV Path
-          CMD="python analysis/data-availability/generate_visuals.py --csv-path $CSV_PATH"
+          CMD="python analysis/data-availability/generate_visulas.py --csv-path $CSV_PATH"
           
           # Conditionally add ALL optional arguments IF they have a value
           if [ -n "${{ github.event.inputs.start_year }}" ]; then
