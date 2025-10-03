@@ -33,6 +33,15 @@ on:
         default: 'DART'
         required: true
         type: string
+      viz-format: # <-- NEW INPUT
+        description: 'Output format for visualizations (png, pdf, or both)'
+        default: 'both'
+        required: true
+        type: choice
+        options:
+          - png
+          - pdf
+          - both
 
 jobs:
   run-mima:
@@ -64,7 +73,8 @@ jobs:
             --start-year ${{ github.event.inputs.start-year }} \
             --end-year ${{ github.event.inputs.end-year }} \
             --input-path "${{ github.event.inputs.input-path }}" \
-            --output-path "${{ github.event.inputs.output-path }}"
+            --output-path "${{ github.event.inputs.output-path }}" \
+            --viz-format "${{ github.event.inputs.viz-format }}" # <-- NEW ARGUMENT
       
       - name: Commit results if changed
         run: |
