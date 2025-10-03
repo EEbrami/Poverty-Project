@@ -16,7 +16,7 @@ Users write and submit statistical programs written in [R](https://www.r-project
 
 To ensure proper processing of user requests, LISSY requires a few exceptions to the standard statistical program syntax.
 
-[View Job Submission Guide](https://www.lisdatacenter.org/data-access/lissy/)
+[Self-Teaching Materials](https://www.lisdatacenter.org/resources/self-teaching/)
 
 ## LIS’ Rules for Citation
 
