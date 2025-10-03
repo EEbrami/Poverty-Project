@@ -45,10 +45,14 @@ on:
         type: string
         default: 'vertical-grid-5yr' 
       output_format:
-        description: 'Output format(s) to generate (comma-separated: png, pdf, svg)'
+        description: 'Output format(s) to generate'
         required: true
-        type: string
-        default: '' # Leave empty; the Python default is now 'png,pdf'.
+        type: choice
+        default: 'png'
+        options:
+        - png
+        - pdf
+        - png,pdf
 
 jobs:
   generate-visuals:
@@ -83,7 +87,7 @@ jobs:
           fi
 
           # Start CMD with the mandatory CSV Path
-          CMD="python analysis/data-availability/visuals/generate_visuals.py --csv-path $CSV_PATH"
+          CMD="python analysis/data-availability/generate_visuals.py --csv-path $CSV_PATH"
           
           # Conditionally add ALL optional arguments IF they have a value
           if [ -n "${{ github.event.inputs.start_year }}" ]; then
