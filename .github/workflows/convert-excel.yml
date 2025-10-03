@@ -86,7 +86,7 @@ jobs:
           echo "has_converted_files=false" >> $GITHUB_OUTPUT
         fi
 
-    - name: Commit and push converted files
+  - name: Commit and push converted files
         if: steps.check-converted.outputs.has_converted_files == 'true'
         run: |
           git config --local user.email "action@github.com"
