@@ -39,7 +39,7 @@ def parse_args():
         "--countries",
         type=str,
         required=True,
-        help="Comma-separated list of ISO country codes (e.g., 'CAN,DEU,LUX')."
+        help="Comma-separated list of country names as they appear in the input CSV (e.g., 'Canada,Germany,Luxembourg')."
     )
     
     parser.add_argument(

@@ -74,7 +74,7 @@ Run the `compute_mima.py` script from the repository root:
 ```bash
 python compute_mima.py \
   --ma-number 5 \
-  --countries "CAN,DEU,LUX,GBR,USA" \
+  --countries "Canada,Germany,Luxembourg,United Kingdom,United States" \
   --start-year 1985 \
   --end-year 2021 \
   --input-path "xlsxConverted/csvFiles/dart-med-pop_decomp-dhi.csv" \
@@ -86,7 +86,7 @@ python compute_mima.py \
 | Argument | Type | Description | Constraints |
 |----------|------|-------------|-------------|
 | `--ma-number` | Integer | MA window size (N) | Must be between 2 and 7 inclusive |
-| `--countries` | String | Comma-separated ISO country codes | e.g., `'CAN,DEU,LUX'` |
+| `--countries` | String | Comma-separated country names (must match input CSV) | e.g., `'Canada,Germany,Luxembourg'` |
 | `--start-year` | Integer | Start year (inclusive) | Must be < end-year |
 | `--end-year` | Integer | End year (inclusive) | Must be > start-year |
 | `--input-path` | String | Full path to source CSV | File must exist |
@@ -107,7 +107,7 @@ The workflow can also be executed via GitHub Actions for automated, reproducible
 3. Click **Run workflow**
 4. Enter the desired parameters (or use defaults):
    - **ma-number**: Default `5`
-   - **countries**: Default `'CAN,DEU,LUX,GBR,USA'`
+   - **countries**: Default `'Canada,Germany,Luxembourg,United Kingdom,United States'`
    - **start-year**: Default `1985`
    - **end-year**: Default `2021`
    - **input-path**: Default `'xlsxConverted/csvFiles/dart-med-pop_decomp-dhi.csv'`
@@ -174,7 +174,7 @@ For the command:
 ```bash
 python compute_mima.py \
   --ma-number 5 \
-  --countries "CAN,DEU,LUX" \
+  --countries "Canada,Germany,Luxembourg" \
   --start-year 1985 \
   --end-year 2021 \
   --input-path "xlsxConverted/csvFiles/dart-med-pop_decomp-dhi.csv" \

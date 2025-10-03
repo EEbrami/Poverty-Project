@@ -9,8 +9,8 @@ on:
         required: true
         type: number
       countries:
-        description: 'Comma-separated ISO country codes (e.g., CAN,DEU,LUX,GBR,USA)'
-        default: 'CAN,DEU,LUX,GBR,USA'
+        description: 'Comma-separated country names (e.g., Canada,Germany,Luxembourg,United Kingdom,United States)'
+        default: 'Canada,Germany,Luxembourg,United Kingdom,United States'
         required: true
         type: string
       start-year:
