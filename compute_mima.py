@@ -187,10 +187,13 @@ def compute_centered_ma(df: pd.DataFrame, window: int, min_periods: int = 3) -> 
     """
     df_ma = df.copy()
     
+    # Adjust min_periods if it exceeds window size
+    effective_min_periods = min(min_periods, window)
+    
     for idx in df_ma.index:
         series = df_ma.loc[idx]
         # Use pandas rolling with center=True
-        ma_series = series.rolling(window=window, center=True, min_periods=min_periods).mean()
+        ma_series = series.rolling(window=window, center=True, min_periods=effective_min_periods).mean()
         df_ma.loc[idx] = ma_series
     
     return df_ma
@@ -210,10 +213,13 @@ def compute_trailing_ma(df: pd.DataFrame, window: int, min_periods: int = 3) -> 
     """
     df_ma = df.copy()
     
+    # Adjust min_periods if it exceeds window size
+    effective_min_periods = min(min_periods, window)
+    
     for idx in df_ma.index:
         series = df_ma.loc[idx]
         # Use pandas rolling with center=False (default)
-        ma_series = series.rolling(window=window, center=False, min_periods=min_periods).mean()
+        ma_series = series.rolling(window=window, center=False, min_periods=effective_min_periods).mean()
         df_ma.loc[idx] = ma_series
     
     return df_ma
@@ -436,7 +442,8 @@ def main():
     
     # Compute Centered MA
     print("\nComputing Centered MA...")
-    logs['centered'] = [f"Execution started", f"Window size: {args.ma_number}", f"Minimum periods: 3"]
+    effective_min_centered = min(3, args.ma_number)
+    logs['centered'] = [f"Execution started", f"Window size: {args.ma_number}", f"Minimum periods: {effective_min_centered}"]
     df_centered = compute_centered_ma(df_interpolated, args.ma_number, min_periods=3)
     centered_nan = df_centered.isna().sum().sum()
     logs['centered'].append(f"Result NaN count: {centered_nan}")
@@ -456,7 +463,8 @@ def main():
     
     # Compute Trailing MA
     print("Computing Trailing MA...")
-    logs['trailing'] = [f"Execution started", f"Window size: {args.ma_number}", f"Minimum periods: 3"]
+    effective_min_trailing = min(3, args.ma_number)
+    logs['trailing'] = [f"Execution started", f"Window size: {args.ma_number}", f"Minimum periods: {effective_min_trailing}"]
     df_trailing = compute_trailing_ma(df_interpolated, args.ma_number, min_periods=3)
     trailing_nan = df_trailing.isna().sum().sum()
     logs['trailing'].append(f"Result NaN count: {trailing_nan}")
@@ -482,7 +490,8 @@ def main():
         logs['weighted'].append(f"WARNING: Skipped - Weighted MA requires odd window size (N={args.ma_number} is even)")
         print(f"  ⚠ Skipped (even window size)")
     else:
-        logs['weighted'].append(f"Minimum periods: 3")
+        effective_min_weighted = min(3, args.ma_number)
+        logs['weighted'].append(f"Minimum periods: {effective_min_weighted}")
         logs['weighted'].append(f"Using triangular weights for centered window")
         df_weighted = compute_weighted_ma(df_interpolated, args.ma_number, min_periods=3)
         weighted_nan = df_weighted.isna().sum().sum()
