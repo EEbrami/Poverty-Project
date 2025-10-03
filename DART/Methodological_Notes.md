@@ -6,7 +6,7 @@ The following informations are extracted from [Methodological Notes](https://www
 All surveyed households and their members are included in our estimates of Gini and Atkinson coefficients, percentile ratios, and poverty lines. Poverty lines are calculated based on the total population. Those lines are then used to calculate poverty rates among subgroups (children and the elderly). Thus, when calculating poverty rates, the subgroups vary, but the poverty lines remain constant within any given dataset.
 
 ## Income Concept
-All Key Figures use the LIS data on disposable household income. For more information on the components of income included in this measure, see METIS
+All Key Figures use the LIS data on [disposable household income](https://www.lisdatacenter.org/data-access/key-figures/methods/disposable/). For more information on the components of income included in this measure, see [METIS](https://www.lisdatacenter.org/frontend#/home).
 
 ## Bottom- and Top-Coding
 Although LIS does not apply bottom- or top-coding to the microdatasets themselves, we bottom-and top-code income when creating the Key Figures. Before equivalisation, top and bottom coding is applied by setting boundaries for extreme values of log transformed Disposable Household Income: at the top Q3 plus 3 times the interquartile range (Q3-Q1), and at the bottom Q1 minus 3 times the interquartile range.
