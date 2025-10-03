@@ -70,6 +70,14 @@ def parse_args():
         help="Directory path where the root output folder will be created (e.g., 'DART' -> outputs to 'DART/MIMA/')."
     )
     
+    parser.add_argument(
+        "--viz-format", # <-- NEW ARGUMENT DEFINITION
+        type=str,
+        default='both',
+        choices=['png', 'pdf', 'both'],
+        help="Output format for visualizations: 'png', 'pdf', or 'both'. (Default: 'both')"
+    )
+    
     return parser.parse_args()
 
 
@@ -361,7 +369,8 @@ def create_metadata_log(
         f.write(f"Input File: {args.input_path}\n")
         f.write(f"Output Path: {args.output_path}\n")
         f.write(f"Interpolation Limit: 2 years\n")
-        f.write(f"Minimum Required Values per Window: {min(3, args.ma_number)}\n\n")
+        f.write(f"Minimum Required Values per Window: {min(3, args.ma_number)}\n")
+        f.write(f"Visualization Format: {args.viz_format}\n\n") # <-- ADDED VIZ FORMAT TO LOG
         
         f.write("DATA PREPROCESSING:\n")
         f.write("-" * 80 + "\n")
@@ -419,9 +428,10 @@ def generate_visualizations(
     input_stem: str,
     n: int,
     start_year: int,
-    end_year: int
+    end_year: int,
+    viz_format: str # <-- NEW ARGUMENT IN SIGNATURE
 ) -> None:
-    """Generate PNG and PDF visualizations for each MA variant."""
+    """Generate PNG and PDF visualizations for each MA variant based on viz_format."""
     
     year_cols = [str(y) for y in years]
     
@@ -447,16 +457,18 @@ def generate_visualizations(
         ax.grid(True, alpha=0.3)
         
         # Save as PNG
-        png_filename = f"{input_stem}_{method}_MA{n}_{start_year}-{end_year}.png"
-        png_path = os.path.join(output_dir, png_filename)
-        plt.savefig(png_path, dpi=300, bbox_inches='tight')
-        print(f"  Generated: {png_path}")
+        if viz_format in ['png', 'both']: # <-- CONDITIONAL SAVE
+            png_filename = f"{input_stem}_{method}_MA{n}_{start_year}-{end_year}.png"
+            png_path = os.path.join(output_dir, png_filename)
+            plt.savefig(png_path, dpi=300, bbox_inches='tight')
+            print(f"  Generated: {png_path}")
         
         # Save as PDF
-        pdf_filename = f"{input_stem}_{method}_MA{n}_{start_year}-{end_year}.pdf"
-        pdf_path = os.path.join(output_dir, pdf_filename)
-        plt.savefig(pdf_path, bbox_inches='tight')
-        print(f"  Generated: {pdf_path}")
+        if viz_format in ['pdf', 'both']: # <-- CONDITIONAL SAVE
+            pdf_filename = f"{input_stem}_{method}_MA{n}_{start_year}-{end_year}.pdf"
+            pdf_path = os.path.join(output_dir, pdf_filename)
+            plt.savefig(pdf_path, bbox_inches='tight')
+            print(f"  Generated: {pdf_path}")
         
         plt.close(fig)
 
@@ -481,6 +493,7 @@ def main():
     print(f"Time Period: {args.start_year} - {args.end_year}")
     print(f"Input File: {args.input_path}")
     print(f"Output Base: {args.output_path}")
+    print(f"Visualization Format: {args.viz_format}") # <-- ADDED VIZ FORMAT TO OUTPUT
     print(f"=" * 80)
     print()
     
@@ -533,7 +546,8 @@ def main():
     
     print(f"\nStep 6: Generating visualizations...")
     generate_visualizations(results, entity_col, years, str(viz_dir), 
-                          input_stem, args.ma_number, args.start_year, args.end_year)
+                          input_stem, args.ma_number, args.start_year, 
+                          args.end_year, args.viz_format) # <-- PASSED NEW ARGUMENT
     
     print(f"\n" + "=" * 80)
     print(f"✓ MIMA computation completed successfully!")
