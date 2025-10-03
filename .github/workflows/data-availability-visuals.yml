@@ -6,14 +6,24 @@ on:
       - '**' # General trigger: Runs on push to any branch for visibility and testing.
     paths:
       - '.github/workflows/data-availability-visuals.yml'
-  
+
   workflow_dispatch:
     inputs:
       csv_path:
         description: 'Path to the input CSV within the repo (e.g., xlsxConverted/csvFiles/dart-med-pop_decomp-dhi.csv)'
         required: true
         type: string
-        default: 'xlsxConverted/csvFiles/dart-med-pop_decomp-dhi.csv'
+        default: 'xlsxConverted/csvFiles/our-lis-documentation-availability-matrix.csv'
+      variables:
+        description: 'Comma-separated list of variables for combined analysis (optional)'
+        required: false
+        type: string
+        default: ''
+      countries:
+        description: 'Comma-separated list of ISO alpha-2 codes to filter by (optional)'
+        required: false
+        type: string
+        default: ''
       start_year:
         description: 'Clip to years >= start_year (optional)'
         required: false
@@ -33,7 +43,7 @@ on:
         description: 'Character to render for available data (default: #)'
         required: false
         type: string
-        default: '#' 
+        default: '#'
       include_universal:
         description: 'Include Universal row showing full availability (default: true)'
         required: false
@@ -43,7 +53,7 @@ on:
         description: 'Defines the visual grid style (e.g., vertical-grid-5yr, alt-row-shading)'
         required: true
         type: string
-        default: 'vertical-grid-5yr' 
+        default: 'vertical-grid-5yr'
       output_format:
         description: 'Output format(s) to generate'
         required: true
@@ -73,23 +83,29 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          # Installing packages for image generation (PNG/PDF) and data handling
-          pip install pandas numpy matplotlib seaborn
+          # Installing packages for image generation, data handling, and country code conversion
+          pip install pandas numpy matplotlib seaborn pycountry
 
       - name: Generate visualizations
         run: |
           set -eux
-          
-          # CRITICAL FIX: Determine CSV Path based on trigger (prevents errors on push)
+
+          # Determine CSV Path based on trigger
           CSV_PATH="${{ github.event.inputs.csv_path }}"
           if [ -z "$CSV_PATH" ]; then
-            CSV_PATH="xlsxConverted/csvFiles/dart-med-pop_decomp-dhi.csv" 
+            CSV_PATH="xlsxConverted/csvFiles/our-lis-documentation-availability-matrix.csv"
           fi
 
           # Start CMD with the mandatory CSV Path
           CMD="python analysis/data-availability/generate_visulas.py --csv-path $CSV_PATH"
-          
+
           # Conditionally add ALL optional arguments IF they have a value
+          if [ -n "${{ github.event.inputs.variables }}" ]; then
+            CMD="$CMD --variables ${{ github.event.inputs.variables }}"
+          fi
+          if [ -n "${{ github.event.inputs.countries }}" ]; then
+            CMD="$CMD --countries ${{ github.event.inputs.countries }}"
+          fi
           if [ -n "${{ github.event.inputs.start_year }}" ]; then
             CMD="$CMD --start-year ${{ github.event.inputs.start_year }}"
           fi
@@ -111,27 +127,26 @@ jobs:
           if [ -n "${{ github.event.inputs.output_format }}" ]; then
             CMD="$CMD --output-format ${{ github.event.inputs.output_format }}"
           fi
-          
+
           # Execute the command
           eval $CMD
 
-      - name: Commit and push visualization outputs (CRITICAL FIX)
+      - name: Commit and push visualization outputs
         run: |
           set -eux
-          
+
           # Set Git credentials for the bot
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          
-          # General Fix: Add ALL generated files from the visuals directory.
-          git add analysis/data-availability/visuals/* || true 
-          
+
+          # Add ALL generated files from the visuals directory.
+          git add analysis/data-availability/visuals/* || true
+
           if ! git diff --cached --quiet; then
             # Commit the local changes
             git commit -m "Update generated visualizations for ${{ github.event.inputs.csv_path }}"
-            
-            # CRITICAL FIX: Force push with lease to overwrite generated artifacts 
-            # and avoid the non-fast-forward conflict on binary files.
+
+            # Force push with lease to overwrite generated artifacts
             git push origin ${{ github.ref_name }} --force-with-lease
           else
             echo "No changes to commit."
