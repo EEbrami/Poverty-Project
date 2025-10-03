@@ -87,21 +87,22 @@ jobs:
         fi
 
     - name: Commit and push converted files
-      id: commit-push
-      if: steps.check-converted.outputs.has_converted_files == 'true'
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add xlsxConverted/
-        if git diff --staged --quiet; then
-          echo "No changes to commit"
-        else
-          CONVERTED_COUNT=$(git diff --cached --name-only | wc -l)
-          COMMIT_MSG="Automated file conversion for Excel files - Generated $CONVERTED_COUNT converted files in xlsxConverted (mdFiles, csvFiles, jsonFiles)"
-          git commit -m "$COMMIT_MSG"
-          git push
-          echo "Successfully committed and pushed converted files"
-        fi
+        if: steps.check-converted.outputs.has_converted_files == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add xlsxConverted/
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            CONVERTED_COUNT=$(git diff --cached --name-only | wc -l)
+            COMMIT_MSG="Automated file conversion for Excel files - Generated $CONVERTED_COUNT converted files in xlsxConverted (mdFiles, csvFiles, jsonFiles)"
+            git commit -m "$COMMIT_MSG"
+            # **CRITICAL FIX**: Pull the latest changes before pushing
+            git pull origin ${{ github.ref_name }}
+            git push
+            echo "Successfully committed and pushed converted files"
+          fi
     
     - name: Summary
       if: always()
