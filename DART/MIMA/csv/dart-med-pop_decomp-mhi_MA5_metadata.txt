@@ -5,7 +5,7 @@ MIMA COMPUTATION METADATA
 INPUT PARAMETERS:
 --------------------------------------------------------------------------------
 MA Window Size (N): 5
-Countries: Canada, Germany, Luxembourg, United Kingdom, United States
+Countries: Canada, Germany, Luxembourg, United Kingdom, United States, France, Sweden, Colombia, Israel, Ireland, Austria
 Time Period: 1985 - 2021 (37 years)
 Input File: xlsxConverted/csvFiles/dart-med-pop_decomp-mhi.csv
 Output Path: DART
@@ -15,25 +15,25 @@ Visualization Format: png
 
 DATA PREPROCESSING:
 --------------------------------------------------------------------------------
-Initial NaN count: 18
-Post-interpolation NaN count: 17
-Values filled by interpolation: 1
+Initial NaN count: 80
+Post-interpolation NaN count: 68
+Values filled by interpolation: 12
 
 ================================================================================
 CENTERED MA COMPUTATION
 ================================================================================
 Method: Simple arithmetic mean of symmetric window centered on year t
 Window: t-2 to t+2
-Final NaN count: 17
-Values computed: 168
+Final NaN count: 63
+Values computed: 344
 
 ================================================================================
 TRAILING MA COMPUTATION
 ================================================================================
 Method: Simple arithmetic mean of backward-looking window
 Window: t-4 to t
-Final NaN count: 27
-Values computed: 158
+Final NaN count: 81
+Values computed: 326
 
 ================================================================================
 WEIGHTED MA COMPUTATION
@@ -42,8 +42,8 @@ Method: Centered window with triangular weights
 Weights: [1, 2, 3, 2, 1]
 Window: t-2 to t+2
 Boundary handling: Proportional weight adjustment for partial windows
-Final NaN count: 17
-Values computed: 168
+Final NaN count: 63
+Values computed: 344
 
 ================================================================================
 END OF METADATA
