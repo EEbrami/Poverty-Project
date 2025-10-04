@@ -11,7 +11,7 @@ Input File: xlsxConverted/csvFiles/dart-med-pop_decomp-mhi.csv
 Output Path: DART
 Interpolation Limit: 2 years
 Minimum Required Values per Window: 3
-Visualization Format: pdf
+Visualization Format: png
 
 DATA PREPROCESSING:
 --------------------------------------------------------------------------------
