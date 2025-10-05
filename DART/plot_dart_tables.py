@@ -7,7 +7,10 @@ pr_df = pd.read_csv('dart-table_dhi_pr.csv')
 
 # List of countries
 countries = median_df['countries'].unique()
-years = median_df.columns[1:]
+years = [int(y) for y in median_df.columns[1:]]
+
+# Set x-ticks: every 5 years
+xticks = [y for y in years if (y - years[0]) % 5 == 0]
 
 # Plot DHI Median over time
 plt.figure(figsize=(10, 6))
@@ -18,6 +21,7 @@ plt.xlabel('Year')
 plt.ylabel('DHI Median')
 plt.title('DHI Median over Time by Country')
 plt.legend()
+plt.xticks(xticks, rotation=45)
 plt.grid(True, linestyle='--', alpha=0.3)  # Faded grid
 plt.tight_layout()
 plt.savefig('dart_median_by_country.png')
@@ -32,6 +36,7 @@ plt.xlabel('Year')
 plt.ylabel('DHI PR')
 plt.title('DHI PR over Time by Country')
 plt.legend()
+plt.xticks(xticks, rotation=45)
 plt.grid(True, linestyle='--', alpha=0.3)  # Faded grid
 plt.tight_layout()
 plt.savefig('dart_pr_by_country.png')
