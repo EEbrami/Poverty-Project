@@ -2,34 +2,37 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Load data
-median_df = pd.read_csv("dart-table_dhi_median.csv")
-pr_df = pd.read_csv("dart-table_dhi_pr.csv")
+median_df = pd.read_csv('dart-table_dhi_median.csv')
+pr_df = pd.read_csv('dart-table_dhi_pr.csv')
 
-# Set up years from column names (exclude 'countries')
+# List of countries
+countries = median_df['countries'].unique()
 years = median_df.columns[1:]
 
-# Plot median values and save
-plt.figure(figsize=(12, 6))
-for idx, row in median_df.iterrows():
-    plt.plot(years, row[1:], label=row['countries'])
-plt.title("DHI Median by Country")
-plt.xlabel("Year")
-plt.ylabel("Median Value")
+# Plot DHI Median over time
+plt.figure(figsize=(10, 6))
+for country in countries:
+    country_data = median_df[median_df['countries'] == country]
+    plt.plot(years, country_data.iloc[0, 1:], label=country)
+plt.xlabel('Year')
+plt.ylabel('DHI Median')
+plt.title('DHI Median over Time by Country')
 plt.legend()
-plt.grid(True, which='both', alpha=0.2)  # faded grid
+plt.grid(True, linestyle='--', alpha=0.3)  # Faded grid
 plt.tight_layout()
-plt.savefig("dart_median_plot.png")
-plt.close()
+plt.savefig('dart_median_by_country.png')
+plt.show()
 
-# Plot pr values and save
-plt.figure(figsize=(12, 6))
-for idx, row in pr_df.iterrows():
-    plt.plot(years, row[1:], label=row['countries'])
-plt.title("DHI PR by Country")
-plt.xlabel("Year")
-plt.ylabel("PR Value")
+# Plot DHI PR over time
+plt.figure(figsize=(10, 6))
+for country in countries:
+    country_data = pr_df[pr_df['countries'] == country]
+    plt.plot(years, country_data.iloc[0, 1:], label=country)
+plt.xlabel('Year')
+plt.ylabel('DHI PR')
+plt.title('DHI PR over Time by Country')
 plt.legend()
-plt.grid(True, which='both', alpha=0.2)  # faded grid
+plt.grid(True, linestyle='--', alpha=0.3)  # Faded grid
 plt.tight_layout()
-plt.savefig("dart_pr_plot.png")
-plt.close()
+plt.savefig('dart_pr_by_country.png')
+plt.show()
