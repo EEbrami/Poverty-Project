@@ -1,0 +1,34 @@
+[
+  {
+    "File":"H & I",
+    "Name":"HID",
+    "Label":"household identifier",
+    "Codes":null,
+    "Definition":"Unique (within dataset) household number.",
+    "Notes \/ comments":"For confidentiality reasons, this identifier differs from the original one.\nNecessary when merging household and person file.  This identifier is unique only within each country\/year dataset; when combining different countries or years it is necessary to use it in combination with the variable DID in order to uniquely identify households."
+  },
+  {
+    "File":"I",
+    "Name":"PID",
+    "Label":"person identifier",
+    "Codes":null,
+    "Definition":"Unique (within household) person number.",
+    "Notes \/ comments":"For confidentiality reasons, this identifier differs from the original one.\nThis identifier is unique only within each household (it is necessary to use it in combination with the variable HID in order to uniquely identify individuals)."
+  },
+  {
+    "File":"H & I",
+    "Name":"DID",
+    "Label":"unique country\/year number",
+    "Codes":"1 1\n2 2\n3 3\n4 4\n5 5\n6 6\n7 7\n8 8\n9 9\n10 10\n13 13\n14 14\n15 15\n16 16\n17 17\n18 18\n19 19\n20 20\n21 21\n22 22\n...",
+    "Definition":"Unique (within LIS Database) dataset number.",
+    "Notes \/ comments":"Assigned by LIS in order of entry into LIS Database."
+  },
+  {
+    "File":"H & I",
+    "Name":"DNAME",
+    "Label":"country\/year identifier",
+    "Codes":"1 il79\n2 de81\n3 uk79\n4 no79\n5 ca81\n6 us79\n7 se81\n8 ch82\n9 au81\n10 nl83\n13 it86\n14 pl86\n15 us86\n16 de84\n17 il86\n18 au85\n19 ca87\n20 lu85\n21 nl87\n22 se87\n...",
+    "Definition":"Unique (within LIS Database) dataset identifier, composed of a 2-letter country abbreviation (coded according to the ISO-3166) and a 2-digit income reference year.",
+    "Notes \/ comments":"Please note that the income reference year may differ from the year following which the survey was named by the data provider, and\/or the year in which the survey was conducted."
+  }
+]
