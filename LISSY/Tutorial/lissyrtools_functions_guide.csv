@@ -1,0 +1,193 @@
+Category,ObjectName,Description,DocumentationLink
+Utility and Helper Functions,add_leading_0s,Add leading 0s,https://lis-cross-national-data-center.github.io/lissyrtools/reference/add_leading_0s.html
+Utility and Helper Functions,add_unique_ids,Add unique ID variables when binding LIS or LWS files.,https://lis-cross-national-data-center.github.io/lissyrtools/reference/add_unique_ids.html
+Utility and Helper Functions,all.is.numeric,Check if all elements in a vector are numeric,https://lis-cross-national-data-center.github.io/lissyrtools/reference/all.is.numeric.html
+Utility and Helper Functions,all.values.equal,All values are equal *[Deprecated]*,https://lis-cross-national-data-center.github.io/lissyrtools/reference/all.values.equal.html
+Data Transformation and Cleaning,apply_iqr_top_bottom_coding,Apply IQR-Based Top and Bottom Coding to LIS/LWS Variables,https://lis-cross-national-data-center.github.io/lissyrtools/reference/apply_iqr_top_bottom_coding.html
+Data Transformation and Cleaning,apply_oecd_equivalisation,Apply OECD Equivalence Scale to a Variable,https://lis-cross-national-data-center.github.io/lissyrtools/reference/apply_oecd_equivalisation.html
+Data Transformation and Cleaning,apply_ppp_adjustment,Adjust Monetary Variables for Inflation and PPP,https://lis-cross-national-data-center.github.io/lissyrtools/reference/apply_ppp_adjustment.html
+Data Transformation and Cleaning,apply_sqrt_equivalisation,Apply Square-Root Equivalisation to a Variable,https://lis-cross-national-data-center.github.io/lissyrtools/reference/apply_sqrt_equivalisation.html
+Utility and Helper Functions,bind_lissy_files,Bind multiple LIS or LWS datasets,https://lis-cross-national-data-center.github.io/lissyrtools/reference/bind_lissy_files.html
+Utility and Helper Functions,ccyy_to_cname,"Get the country name from the 'ccyy""",https://lis-cross-national-data-center.github.io/lissyrtools/reference/ccyy_to_cname.html
+Utility and Helper Functions,ccyy_to_yyyy,"Get the year from the 'ccyy""",https://lis-cross-national-data-center.github.io/lissyrtools/reference/ccyy_to_yyyy.html
+Utility and Helper Functions,change_file_name_format,Change the format of a file name,https://lis-cross-national-data-center.github.io/lissyrtools/reference/change_file_name_format.html
+Metadata and Variable Management,check_empty_data,Checks for Empty Data Input,https://lis-cross-national-data-center.github.io/lissyrtools/reference/check_empty_data.html
+Metadata and Variable Management,check_file_lists_contain_same_datasets,Checks if two lists have the same datasets,https://lis-cross-national-data-center.github.io/lissyrtools/reference/check_file_lists_contain_same_datasets.html
+Metadata and Variable Management,check_github_version,Retrieve the current version of lissyrtools from the GitHub repository,https://lis-cross-national-data-center.github.io/lissyrtools/reference/check_github_version.html
+Metadata and Variable Management,check_input_in_weight_argument,Validate the Weight Variable Input,https://lis-cross-national-data-center.github.io/lissyrtools/reference/check_input_in_weight_argument.html
+Metadata and Variable Management,check_invalid_vars,Checks for Invalid Vars,https://lis-cross-national-data-center.github.io/lissyrtools/reference/check_invalid_vars.html
+Metadata and Variable Management,check_iso2,Checks for Invalid iso2 codes.,https://lis-cross-national-data-center.github.io/lissyrtools/reference/check_iso2.html
+Metadata and Variable Management,check_length_iso2,Checks for the length of the characters in the argument 'data'.,https://lis-cross-national-data-center.github.io/lissyrtools/reference/check_length_iso2.html
+Metadata and Variable Management,check_missing_share,Checks the share of missing values for each column acroos a list of data frames.,https://lis-cross-national-data-center.github.io/lissyrtools/reference/check_missing_share.html
+Metadata and Variable Management,check_variable_level,Checks if the variable is 'household' or 'person' level.,https://lis-cross-national-data-center.github.io/lissyrtools/reference/check_variable_level.html
+Metadata and Variable Management,checks_compute_functions,Perform checks for 'compute' functions.,https://lis-cross-national-data-center.github.io/lissyrtools/reference/checks_compute_functions.html
+Statistical Computations,compute_atkinson,Compute Atkinson index.,https://lis-cross-national-data-center.github.io/lissyrtools/reference/compute_atkinson.html
+Statistical Computations,compute_gini,Compute gini index.,https://lis-cross-national-data-center.github.io/lissyrtools/reference/compute_gini.html
+Statistical Computations,compute_mean,Compute standard indicators.,https://lis-cross-national-data-center.github.io/lissyrtools/reference/compute_mean.html
+Statistical Computations,compute_percentiles,Compute percentiles.,https://lis-cross-national-data-center.github.io/lissyrtools/reference/compute_percentiles.html
+Statistical Computations,compute_poverty_rate,Compute poverty rate.,https://lis-cross-national-data-center.github.io/lissyrtools/reference/compute_poverty_rate.html
+Statistical Computations,compute_weighted_count,Compute (Weighted) Counts or Percentages for a Categorical Variable,https://lis-cross-national-data-center.github.io/lissyrtools/reference/compute_weighted_count.html
+Statistical Computations,compute_weighted_mean,Compute (Weighted) Means for a Variable,https://lis-cross-national-data-center.github.io/lissyrtools/reference/compute_weighted_mean.html
+Statistical Computations,compute_weighted_percentiles,Compute Weighted Percentiles or Share of Distribution,https://lis-cross-national-data-center.github.io/lissyrtools/reference/compute_weighted_percentiles.html
+Utility and Helper Functions,convert_list_from_ccyy_to_cc_names_yyyy,Rearranges a list whose elements are ccyy's into country names with numeric vectors names after its years.,https://lis-cross-national-data-center.github.io/lissyrtools/reference/convert_list_from_ccyy_to_cc_names_yyyy.html
+Metadata and Variable Management,data_inc_ref_year,LWS income reference years,https://lis-cross-national-data-center.github.io/lissyrtools/reference/data_inc_ref_year.html
+Metadata and Variable Management,data_vars_labels,Variable labels,https://lis-cross-national-data-center.github.io/lissyrtools/reference/data_vars_labels.html
+Metadata and Variable Management,data_with_warnings,Variable notes,https://lis-cross-national-data-center.github.io/lissyrtools/reference/data_with_warnings.html
+Utility and Helper Functions,database_character_to_name,"Converts 'i', 'w', 'e' into 'LIS', 'LWS' 'ERFLIS'",https://lis-cross-national-data-center.github.io/lissyrtools/reference/database_character_to_name.html
+Data Access and Loading,datasets,LIS and LWS datasets,https://lis-cross-national-data-center.github.io/lissyrtools/reference/datasets.html
+Plotting and Data Structuring,decide_plot_type,Decide plot type based on input data frame,https://lis-cross-national-data-center.github.io/lissyrtools/reference/decide_plot_type.html
+Utility and Helper Functions,define_option,Define an option,https://lis-cross-national-data-center.github.io/lissyrtools/reference/define_option.html
+Data Transformation and Cleaning,deflators,CPI and PPP deflators.,https://lis-cross-national-data-center.github.io/lissyrtools/reference/deflators.html
+Metadata and Variable Management,determine_file_level,Determine the level of the file,https://lis-cross-national-data-center.github.io/lissyrtools/reference/determine_file_level.html
+Metadata and Variable Management,determine_weight,Determine the name of the weight variable,https://lis-cross-national-data-center.github.io/lissyrtools/reference/determine_weight.html
+Variable Lists and Definitions,erflis_household_variables,ERFLIS Household Variables,https://lis-cross-national-data-center.github.io/lissyrtools/reference/erflis_household_variables.html
+Variable Lists and Definitions,erflis_person_variables,ERFLIS Person Variables,https://lis-cross-national-data-center.github.io/lissyrtools/reference/erflis_person_variables.html
+Plotting and Data Structuring,extend_breaks_min_and_max,Extend the minimum and maximum of a vector used for breaks,https://lis-cross-national-data-center.github.io/lissyrtools/reference/extend_breaks_min_and_max.html
+Utility and Helper Functions,extract_information_from_file_name,Extract information from file name,https://lis-cross-national-data-center.github.io/lissyrtools/reference/extract_information_from_file_name.html
+Utility and Helper Functions,four_digit_year,Compute four digit year from two digit one.,https://lis-cross-national-data-center.github.io/lissyrtools/reference/four_digit_year.html
+Data Access and Loading,get_countries_lis,Print all the country code in LIS,https://lis-cross-national-data-center.github.io/lissyrtools/reference/get_countries_lis.html
+Data Access and Loading,get_countries_lws,Print all the country code in LWS,https://lis-cross-national-data-center.github.io/lissyrtools/reference/get_countries_lws.html
+Data Access and Loading,get_database,Get the database from a list of files,https://lis-cross-national-data-center.github.io/lissyrtools/reference/get_database.html
+Data Access and Loading,get_directory,Get directory from parameters file,https://lis-cross-national-data-center.github.io/lissyrtools/reference/get_directory.html
+Data Access and Loading,get_file_lisppp,Retreive the 'lisppp' deflator for a given file and variable.,https://lis-cross-national-data-center.github.io/lissyrtools/reference/get_file_lisppp.html
+Data Access and Loading,get_index_hh_heads,Get the index of hh-heads,https://lis-cross-national-data-center.github.io/lissyrtools/reference/get_index_hh_heads.html
+Data Access and Loading,get_lissy_attributes,Get the lissy attributes,https://lis-cross-national-data-center.github.io/lissyrtools/reference/get_lissy_attributes.html
+Data Access and Loading,get_lws_file_income_reference_year,Retrieve the reference year for LWS files,https://lis-cross-national-data-center.github.io/lissyrtools/reference/get_lws_file_income_reference_year.html
+Data Access and Loading,get_surveys_lis,Print the survey used to construct the LIS datasets for a given country.,https://lis-cross-national-data-center.github.io/lissyrtools/reference/get_surveys_lis.html
+Data Access and Loading,get_surveys_lws,Print the survey used to construct the LWS datasets for a given country.,https://lis-cross-national-data-center.github.io/lissyrtools/reference/get_surveys_lws.html
+Data Access and Loading,get_years_lis,Print all the existing years in LIS for a given country.,https://lis-cross-national-data-center.github.io/lissyrtools/reference/get_years_lis.html
+Data Access and Loading,get_years_lws,Print all the existing years in LWS for a given country.,https://lis-cross-national-data-center.github.io/lissyrtools/reference/get_years_lws.html
+Metadata and Variable Management,has_lissy_attributes,A list with lissy attributes,https://lis-cross-national-data-center.github.io/lissyrtools/reference/has_lissy_attributes.html
+Data Transformation and Cleaning,implement_adjust_by_lisppp,Applies the deflator adjustment to an aggregate,https://lis-cross-national-data-center.github.io/lissyrtools/reference/implement_adjust_by_lisppp.html
+Data Transformation and Cleaning,implement_equivalise,Apply equivalise by number of household members,https://lis-cross-national-data-center.github.io/lissyrtools/reference/implement_equivalise.html
+Data Transformation and Cleaning,implement_equivalise_oecd,Apply equivalise with the OECD scale,https://lis-cross-national-data-center.github.io/lissyrtools/reference/implement_equivalise_oecd.html
+Data Transformation and Cleaning,implement_false_zeros_to_na,Apply the recoding of zeros into missing values if all values are zero,https://lis-cross-national-data-center.github.io/lissyrtools/reference/implement_false_zeros_to_na.html
+Data Transformation and Cleaning,implement_filter_age,Apply 'transform_filter_age()' to a single file,https://lis-cross-national-data-center.github.io/lissyrtools/reference/implement_filter_age.html
+Data Transformation and Cleaning,implement_negative_values_to_zero,Apply recoding negative values to zero,https://lis-cross-national-data-center.github.io/lissyrtools/reference/implement_negative_values_to_zero.html
+Data Transformation and Cleaning,implement_restrict_age,Apply 'transform_restrict_age()' to a single file,https://lis-cross-national-data-center.github.io/lissyrtools/reference/implement_restrict_age.html
+Data Transformation and Cleaning,implement_restrict_to_household_heads,Apply 'transform_restrict_to_household_heads()' to a single file,https://lis-cross-national-data-center.github.io/lissyrtools/reference/implement_restrict_to_household_heads.html
+Data Transformation and Cleaning,implement_top_code_with_iqr,Apply top or bottom coding with log IQR to a single file,https://lis-cross-national-data-center.github.io/lissyrtools/reference/implement_top_code_with_iqr.html
+Data Transformation and Cleaning,implement_top_code_with_iqr_pfile,Apply top and bottom coding with log IQR to a level-defined file,https://lis-cross-national-data-center.github.io/lissyrtools/reference/implement_top_code_with_iqr_pfile.html
+Data Transformation and Cleaning,implement_zeros_to_na,Apply recoding of zeros into missing values,https://lis-cross-national-data-center.github.io/lissyrtools/reference/implement_zeros_to_na.html
+Data Access and Loading,import_lisppp_data,Import lisppp dataset,https://lis-cross-national-data-center.github.io/lissyrtools/reference/import_lisppp_data.html
+Data Access and Loading,import_sample_datasets_to_lissyuse,Import Sample Datasets to lissyuse,https://lis-cross-national-data-center.github.io/lissyrtools/reference/import_sample_datasets_to_lissyuse.html
+Utility and Helper Functions,intervals_with_single_value,Interval has single value,https://lis-cross-national-data-center.github.io/lissyrtools/reference/intervals_with_single_value.html
+Utility and Helper Functions,invalid_ccyy_pairs,Checks for Invalid ccyy.,https://lis-cross-national-data-center.github.io/lissyrtools/reference/invalid_ccyy_pairs.html
+Utility and Helper Functions,iqr_top_bottom_coding,IQR-Based Top/Bottom Coding for a Single Variable,https://lis-cross-national-data-center.github.io/lissyrtools/reference/iqr_top_bottom_coding.html
+Utility and Helper Functions,is_change_possible,Is possible to produce the desired format change,https://lis-cross-national-data-center.github.io/lissyrtools/reference/is_change_possible.html
+Utility and Helper Functions,is_lissy_machine,Is a LISSY machine,https://lis-cross-national-data-center.github.io/lissyrtools/reference/is_lissy_machine.html
+Utility and Helper Functions,is.all.na.or.zero,Test if all objects are NAs or 0,https://lis-cross-national-data-center.github.io/lissyrtools/reference/is.all.na.or.zero.html
+Utility and Helper Functions,is.all.same.value,Test if all elements of a vector have the same value,https://lis-cross-national-data-center.github.io/lissyrtools/reference/is.all.same.value.html
+Utility and Helper Functions,is.household.dataset,Checks if the dataset is at household level,https://lis-cross-national-data-center.github.io/lissyrtools/reference/is.household.dataset.html
+Dataset-Specific References,it14_h_lis,Sample Household-Level LIS Dataset - Italy 2014,https://lis-cross-national-data-center.github.io/lissyrtools/reference/it14_h_lis.html
+Dataset-Specific References,it14_h_lws,Sample Household-Level LWS Dataset - Italy 2014,https://lis-cross-national-data-center.github.io/lissyrtools/reference/it14_h_lws.html
+Dataset-Specific References,it14_p_lis,Sample Individual-Level LIS Dataset - Italy 2014,https://lis-cross-national-data-center.github.io/lissyrtools/reference/it14_p_lis.html
+Dataset-Specific References,it14_p_lws,Sample Individual-Level LWS Dataset - Italy 2014,https://lis-cross-national-data-center.github.io/lissyrtools/reference/it14_p_lws.html
+Dataset-Specific References,it16_h_lis,Sample Household-Level LIS Dataset - Italy 2016,https://lis-cross-national-data-center.github.io/lissyrtools/reference/it16_h_lis.html
+Dataset-Specific References,it16_h_lws,Sample Household-Level LWS Dataset - Italy 2016,https://lis-cross-national-data-center.github.io/lissyrtools/reference/it16_h_lws.html
+Dataset-Specific References,it16_p_lis,Sample Individual-Level LIS Dataset - Italy 2016,https://lis-cross-national-data-center.github.io/lissyrtools/reference/it16_p_lis.html
+Dataset-Specific References,it16_p_lws,Sample Individual-Level LWS Dataset - Italy 2016,https://lis-cross-national-data-center.github.io/lissyrtools/reference/it16_p_lws.html
+Dataset-Specific References,it20_h_lis,Sample Household-Level LIS Dataset - Italy 2020,https://lis-cross-national-data-center.github.io/lissyrtools/reference/it20_h_lis.html
+Dataset-Specific References,it20_p_lis,Sample Individual-Level LIS Dataset - Italy 2020,https://lis-cross-national-data-center.github.io/lissyrtools/reference/it20_p_lis.html
+Variable Lists and Definitions,key_vars_household_lis,Key Household Variables in LIS,https://lis-cross-national-data-center.github.io/lissyrtools/reference/key_vars_household_lis.html
+Variable Lists and Definitions,key_vars_household_lws,Key Household Variables in LWS,https://lis-cross-national-data-center.github.io/lissyrtools/reference/key_vars_household_lws.html
+Variable Lists and Definitions,key_vars_person_lis,Key Person Variables in LIS,https://lis-cross-national-data-center.github.io/lissyrtools/reference/key_vars_person_lis.html
+Variable Lists and Definitions,key_vars_person_lws,Key Person Variables in LWS,https://lis-cross-national-data-center.github.io/lissyrtools/reference/key_vars_person_lws.html
+Metadata and Variable Management,lis_both_hp_variables,LIS Both Household and Person Variables,https://lis-cross-national-data-center.github.io/lissyrtools/reference/lis_both_hp_variables.html
+Metadata and Variable Management,lis_categorical_variables,LIS Categorical Variables,https://lis-cross-national-data-center.github.io/lissyrtools/reference/lis_categorical_variables.html
+Metadata and Variable Management,lis_continuous_variables,LIS Continuous Variables,https://lis-cross-national-data-center.github.io/lissyrtools/reference/lis_continuous_variables.html
+Metadata and Variable Management,lis_country_specific_variables,LIS Country-Specific Variables,https://lis-cross-national-data-center.github.io/lissyrtools/reference/lis_country_specific_variables.html
+Metadata and Variable Management,lis_household_variables,LIS Household Variables,https://lis-cross-national-data-center.github.io/lissyrtools/reference/lis_household_variables.html
+Metadata and Variable Management,lis_id_variables,LIS ID Variables,https://lis-cross-national-data-center.github.io/lissyrtools/reference/lis_id_variables.html
+Metadata and Variable Management,lis_income_variables,LIS Income Variables,https://lis-cross-national-data-center.github.io/lissyrtools/reference/lis_income_variables.html
+Metadata and Variable Management,lis_person_variables,LIS Person Variables,https://lis-cross-national-data-center.github.io/lissyrtools/reference/lis_person_variables.html
+Metadata and Variable Management,lis_technical_variables,LIS Technical Variables,https://lis-cross-national-data-center.github.io/lissyrtools/reference/lis_technical_variables.html
+Metadata and Variable Management,lis_variables,LIS Variables,https://lis-cross-national-data-center.github.io/lissyrtools/reference/lis_variables.html
+Metadata and Variable Management,lis_weight_variables,LIS Weight Variables,https://lis-cross-national-data-center.github.io/lissyrtools/reference/lis_weight_variables.html
+Utility and Helper Functions,lissy_map,Wrap over 'purrr::imap()' for lissy files,https://lis-cross-national-data-center.github.io/lissyrtools/reference/lissy_map.html
+Data Access and Loading,lissyuse,Load data easily and efficiently with lissyuse,https://lis-cross-national-data-center.github.io/lissyrtools/reference/lissyuse.html
+Data Access and Loading,load_datasets,Load Dataset Names Based on Criteria,https://lis-cross-national-data-center.github.io/lissyrtools/reference/load_datasets.html
+Metadata and Variable Management,lws_both_hp_variables,LWS Both Household and Person Variables,https://lis-cross-national-data-center.github.io/lissyrtools/reference/lws_both_hp_variables.html
+Metadata and Variable Management,lws_household_variables,LWS Household Variables,https://lis-cross-national-data-center.github.io/lissyrtools/reference/lws_household_variables.html
+Metadata and Variable Management,lws_id_variables,LWS ID Variables,https://lis-cross-national-data-center.github.io/lissyrtools/reference/lws_id_variables.html
+Metadata and Variable Management,lws_person_variables,LWS Person Variables,https://lis-cross-national-data-center.github.io/lissyrtools/reference/lws_person_variables.html
+Metadata and Variable Management,lws_variables,LWS Variables,https://lis-cross-national-data-center.github.io/lissyrtools/reference/lws_variables.html
+Metadata and Variable Management,lws_wealth_categorical_variables,LWS Wealth Categorical Variables,https://lis-cross-national-data-center.github.io/lissyrtools/reference/lws_wealth_categorical_variables.html
+Metadata and Variable Management,lws_wealth_continuous_variables,LWS Wealth Continuous Variables,https://lis-cross-national-data-center.github.io/lissyrtools/reference/lws_wealth_continuous_variables.html
+Metadata and Variable Management,lws_wealth_country_specific_variables,LWS Wealth Country-Specific Variables,https://lis-cross-national-data-center.github.io/lissyrtools/reference/lws_wealth_country_specific_variables.html
+Data Transformation and Cleaning,merge_dataset_levels,Merge household and person-level files,https://lis-cross-national-data-center.github.io/lissyrtools/reference/merge_dataset_levels.html
+Data Transformation and Cleaning,merge_lis_dataset_levels,Merges a hfile with its pfile,https://lis-cross-national-data-center.github.io/lissyrtools/reference/merge_lis_dataset_levels.html
+Variable Lists and Definitions,missing_or_zero_vars_all,Variable Status Data Frame,https://lis-cross-national-data-center.github.io/lissyrtools/reference/missing_or_zero_vars_all.html
+Metadata and Variable Management,missing_values_in_variable_warning,Missing values in variable warning,https://lis-cross-national-data-center.github.io/lissyrtools/reference/missing_values_in_variable_warning.html
+Dataset-Specific References,mx14_h_lis,Sample Household-Level LIS Dataset - Mexico 2014,https://lis-cross-national-data-center.github.io/lissyrtools/reference/mx14_h_lis.html
+Dataset-Specific References,mx14_p_lis,Sample Individual-Level LIS Dataset - Mexico 2014,https://lis-cross-national-data-center.github.io/lissyrtools/reference/mx14_p_lis.html
+Dataset-Specific References,mx16_h_lis,Sample Household-Level LIS Dataset - Mexico 2016,https://lis-cross-national-data-center.github.io/lissyrtools/reference/mx16_h_lis.html
+Dataset-Specific References,mx16_p_lis,Sample Individual-Level LIS Dataset - Mexico 2016,https://lis-cross-national-data-center.github.io/lissyrtools/reference/mx16_p_lis.html
+Dataset-Specific References,mx18_h_lis,Sample Household-Level LIS Dataset - Mexico 2018,https://lis-cross-national-data-center.github.io/lissyrtools/reference/mx18_h_lis.html
+Dataset-Specific References,mx18_p_lis,Sample Individual-Level LIS Dataset - Mexico 2018,https://lis-cross-national-data-center.github.io/lissyrtools/reference/mx18_p_lis.html
+Utility and Helper Functions,n_numbers_smaller,Number of elements smaller than input,https://lis-cross-national-data-center.github.io/lissyrtools/reference/n_numbers_smaller.html
+Metadata and Variable Management,paste_lissy_attributes,Paste lissy attributes,https://lis-cross-national-data-center.github.io/lissyrtools/reference/paste_lissy_attributes.html
+Plotting and Data Structuring,plot_bar,Plot an indicator using a bar plot.,https://lis-cross-national-data-center.github.io/lissyrtools/reference/plot_bar.html
+Plotting and Data Structuring,plot_indicator,Plot an Indicator.,https://lis-cross-national-data-center.github.io/lissyrtools/reference/plot_indicator.html
+Plotting and Data Structuring,plot_line,Plot an indicator using a line plot.,https://lis-cross-national-data-center.github.io/lissyrtools/reference/plot_line.html
+Plotting and Data Structuring,print_all_lissy_files,Print all available files,https://lis-cross-national-data-center.github.io/lissyrtools/reference/print_all_lissy_files.html
+Plotting and Data Structuring,print_atkinson,Print the Atkinson Index,https://lis-cross-national-data-center.github.io/lissyrtools/reference/print_atkinson.html
+Plotting and Data Structuring,print_gini,Print the Gini Coefficient,https://lis-cross-national-data-center.github.io/lissyrtools/reference/print_gini.html
+Plotting and Data Structuring,print_indicator,Print an indicator,https://lis-cross-national-data-center.github.io/lissyrtools/reference/print_indicator.html
+Plotting and Data Structuring,print_percentiles,Print percentiles.,https://lis-cross-national-data-center.github.io/lissyrtools/reference/print_percentiles.html
+Plotting and Data Structuring,print_ratio,Print the Ratio Index,https://lis-cross-national-data-center.github.io/lissyrtools/reference/print_ratio.html
+Data Access and Loading,read_file_name_format,Read the format of a file name,https://lis-cross-national-data-center.github.io/lissyrtools/reference/read_file_name_format.html
+Data Access and Loading,read_format_names,Read the format of files argument,https://lis-cross-national-data-center.github.io/lissyrtools/reference/read_format_names.html
+Data Access and Loading,read_LIS,Read LIS,https://lis-cross-national-data-center.github.io/lissyrtools/reference/read_LIS.html
+Data Access and Loading,read_lissy_files,Read files in LISSY,https://lis-cross-national-data-center.github.io/lissyrtools/reference/read_lissy_files.html
+Data Access and Loading,read_lissy_files_locally,Read files locally,https://lis-cross-national-data-center.github.io/lissyrtools/reference/read_lissy_files_locally.html
+Data Access and Loading,read_rename_files,Rename read files,https://lis-cross-national-data-center.github.io/lissyrtools/reference/read_rename_files.html
+Metadata and Variable Management,remove_dname_with_missings_in_weights,Is Canada LWS on the loaded data ?,https://lis-cross-national-data-center.github.io/lissyrtools/reference/remove_dname_with_missings_in_weights.html
+Utility and Helper Functions,retrieve_database_from_directory,Get the database from a directory string,https://lis-cross-national-data-center.github.io/lissyrtools/reference/retrieve_database_from_directory.html
+Variable Lists and Definitions,retrieve_names_key_variables,Retrieve names of key variables,https://lis-cross-national-data-center.github.io/lissyrtools/reference/retrieve_names_key_variables.html
+Utility and Helper Functions,return_desired_format,Return a file name with the requested format,https://lis-cross-national-data-center.github.io/lissyrtools/reference/return_desired_format.html
+Statistical Computations,run_weighted_absolute_poverty,Compute Absolute Poverty Rate,https://lis-cross-national-data-center.github.io/lissyrtools/reference/run_weighted_absolute_poverty.html
+Statistical Computations,run_weighted_atkinson,Compute Weighted Atkinson Across a List of Data Frames,https://lis-cross-national-data-center.github.io/lissyrtools/reference/run_weighted_atkinson.html
+Statistical Computations,run_weighted_count,Compute (weighted) counts or percentages from a list of data frames,https://lis-cross-national-data-center.github.io/lissyrtools/reference/run_weighted_count.html
+Statistical Computations,run_weighted_gini,Compute Weighted Gini Index Across a List of Data Frames,https://lis-cross-national-data-center.github.io/lissyrtools/reference/run_weighted_gini.html
+Statistical Computations,run_weighted_mean,Compute Weighted Mean Across a List of Data Frames (with optional grouping),https://lis-cross-national-data-center.github.io/lissyrtools/reference/run_weighted_mean.html
+Statistical Computations,run_weighted_percentiles,Compute Weighted Percentiles cross a List of Data Frames (with optional grouping),https://lis-cross-national-data-center.github.io/lissyrtools/reference/run_weighted_percentiles.html
+Statistical Computations,run_weighted_poverty_gap_index,Compute the Poverty Gap Index,https://lis-cross-national-data-center.github.io/lissyrtools/reference/run_weighted_poverty_gap_index.html
+Statistical Computations,run_weighted_poverty_shortfall,Compute the Weighted Poverty Gap (Shortfall),https://lis-cross-national-data-center.github.io/lissyrtools/reference/run_weighted_poverty_shortfall.html
+Statistical Computations,run_weighted_ratios,Compute Percentile Ratios,https://lis-cross-national-data-center.github.io/lissyrtools/reference/run_weighted_ratios.html
+Statistical Computations,run_weighted_relative_poverty,Compute Relative Poverty Rate,https://lis-cross-national-data-center.github.io/lissyrtools/reference/run_weighted_relative_poverty.html
+Metadata and Variable Management,set_lissy_attributes,Set lissy attributes,https://lis-cross-national-data-center.github.io/lissyrtools/reference/set_lissy_attributes.html
+Utility and Helper Functions,sort_lissy_list,Sort a list of lissy files,https://lis-cross-national-data-center.github.io/lissyrtools/reference/sort_lissy_list.html
+Utility and Helper Functions,split_consecutive_values,Split vector into consecutive values,https://lis-cross-national-data-center.github.io/lissyrtools/reference/split_consecutive_values.html
+Plotting and Data Structuring,structure_to_plot,Transform Structured Data Lists into a Tidy Data Frame for Plotting,https://lis-cross-national-data-center.github.io/lissyrtools/reference/structure_to_plot.html
+Data Access and Loading,subset_datasets,Subset Datasets Based on Expression,https://lis-cross-national-data-center.github.io/lissyrtools/reference/subset_datasets.html
+Utility and Helper Functions,testDateTime,Test if a value is a date-time object,https://lis-cross-national-data-center.github.io/lissyrtools/reference/testDateTime.html
+Data Transformation and Cleaning,transform_adjust_by_lisppp,Adjust aggregates by LIS PPPs,https://lis-cross-national-data-center.github.io/lissyrtools/reference/transform_adjust_by_lisppp.html
+Data Transformation and Cleaning,transform_equivalise,Equivalise by number of household members.,https://lis-cross-national-data-center.github.io/lissyrtools/reference/transform_equivalise.html
+Data Transformation and Cleaning,transform_equivalise_oecd,Equivalise with the OECD scale,https://lis-cross-national-data-center.github.io/lissyrtools/reference/transform_equivalise_oecd.html
+Data Transformation and Cleaning,transform_false_zeros_to_na,Recode zeros into missing values if all values are zero,https://lis-cross-national-data-center.github.io/lissyrtools/reference/transform_false_zeros_to_na.html
+Data Transformation and Cleaning,transform_filter_age,Filter a sample by age,https://lis-cross-national-data-center.github.io/lissyrtools/reference/transform_filter_age.html
+Data Transformation and Cleaning,transform_negative_values_to_zero,Recode negative values to zero,https://lis-cross-national-data-center.github.io/lissyrtools/reference/transform_negative_values_to_zero.html
+Data Transformation and Cleaning,transform_restrict_age,Filter a variable by age,https://lis-cross-national-data-center.github.io/lissyrtools/reference/transform_restrict_age.html
+Data Transformation and Cleaning,transform_restrict_to_household_heads,Filter a variable for household heads,https://lis-cross-national-data-center.github.io/lissyrtools/reference/transform_restrict_to_household_heads.html
+Data Transformation and Cleaning,transform_top_code_with_iqr,Apply top or bottom coding with log IQR,https://lis-cross-national-data-center.github.io/lissyrtools/reference/transform_top_code_with_iqr.html
+Data Transformation and Cleaning,transform_weight_by_hh_size,Multiply by household size,https://lis-cross-national-data-center.github.io/lissyrtools/reference/transform_weight_by_hh_size.html
+Data Transformation and Cleaning,transform_zeros_to_na,Recodes zeros into missing values,https://lis-cross-national-data-center.github.io/lissyrtools/reference/transform_zeros_to_na.html
+Dataset-Specific References,us14_h_lis,Sample Household-Level LIS Dataset - US 2014,https://lis-cross-national-data-center.github.io/lissyrtools/reference/us14_h_lis.html
+Dataset-Specific References,us14_p_lis,Sample Individual-Level LIS Dataset - US 2014,https://lis-cross-national-data-center.github.io/lissyrtools/reference/us14_p_lis.html
+Dataset-Specific References,us16_h_lis,Sample Household-Level LIS Dataset - US 2016,https://lis-cross-national-data-center.github.io/lissyrtools/reference/us16_h_lis.html
+Dataset-Specific References,us16_h_lws,Sample Household-Level LWS Dataset - US 2016,https://lis-cross-national-data-center.github.io/lissyrtools/reference/us16_h_lws.html
+Dataset-Specific References,us16_p_lis,Sample Individual-Level LIS Dataset - US 2016,https://lis-cross-national-data-center.github.io/lissyrtools/reference/us16_p_lis.html
+Dataset-Specific References,us16_p_lws,Sample Individual-Level LWS Dataset - US 2016,https://lis-cross-national-data-center.github.io/lissyrtools/reference/us16_p_lws.html
+Dataset-Specific References,us18_h_lis,Sample Household-Level LIS Dataset - US 2018,https://lis-cross-national-data-center.github.io/lissyrtools/reference/us18_h_lis.html
+Dataset-Specific References,us18_p_lis,Sample Individual-Level LIS Dataset - US 2018,https://lis-cross-national-data-center.github.io/lissyrtools/reference/us18_p_lis.html
+Dataset-Specific References,us19_h_lws,Sample Household-Level LWS Dataset - US 2019,https://lis-cross-national-data-center.github.io/lissyrtools/reference/us19_h_lws.html
+Dataset-Specific References,us19_p_lws,Sample Individual-Level LWS Dataset - US 2019,https://lis-cross-national-data-center.github.io/lissyrtools/reference/us19_p_lws.html
+Utility and Helper Functions,value_label_c_data,Value Labels for Country-Specific Variables in LIS and LWS Datasets,https://lis-cross-national-data-center.github.io/lissyrtools/reference/value_label_c_data.html
+Metadata and Variable Management,variable_country_specific_categories,Retrieve the categories of a country-specific variable in LIS/LWS for a given country.,https://lis-cross-national-data-center.github.io/lissyrtools/reference/variable_country_specific_categories.html
+Metadata and Variable Management,variable_exists,Inspect whether a given variable contains more than just non-missing or non-zero values for a selected group of countries in the LIS or LWS databases.,https://lis-cross-national-data-center.github.io/lissyrtools/reference/variable_exists.html
+Metadata and Variable Management,variable_has_note,"Verify if a given variable has a note, for a selected group of countries, in LIS or LWS databases.",https://lis-cross-national-data-center.github.io/lissyrtools/reference/variable_has_note.html
+Metadata and Variable Management,variable_labels,Inspect the Labels of LIS and LWS variables,https://lis-cross-national-data-center.github.io/lissyrtools/reference/variable_labels.html
+Metadata and Variable Management,variable_selection_for_lissyuse,"Load the datasets for lissyuse, and automatically merge h and p level files based on the variables.",https://lis-cross-national-data-center.github.io/lissyrtools/reference/variable_selection_for_lissyuse.html
+Weighted Statistical Utilities,wtd.quantile,Weighted statistical Estimates,https://lis-cross-national-data-center.github.io/lissyrtools/reference/wtd.quantile.html
+Utility and Helper Functions,zero_range,Zero Range Function,https://lis-cross-national-data-center.github.io/lissyrtools/reference/zero_range.html
