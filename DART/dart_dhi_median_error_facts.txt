@@ -1,0 +1,17 @@
+
+Distribution Facts for Percentage Difference (LISSY vs. DART Median DHI)
+--------------------------------------------------------------------------
+Formula: ((median_dhi_LISSY - median_dhi_DART) / median_dhi_DART) * 100
+(A positive value means the LISSY result is higher than the DART table value.)
+
+Total Observations (Country-Years): 185
+
+Mean Error (Bias):              -0.1668 percentage points
+Standard Deviation (Dispersion):0.6729 percentage points
+Minimum Error:                  -3.5382 percentage points
+Maximum Error:                  1.5177 percentage points
+
+Percentiles (A measure of central tendency and spread):
+  25th Percentile (Q1):         -0.1191 percentage points
+  50th Percentile (Median):     -0.0007 percentage points
+  75th Percentile (Q3):         0.0017 percentage points
